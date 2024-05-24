@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "465544372601",
+    "project_id": "origenes-6ab4a",
+    "storage_bucket": "origenes-6ab4a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465544372601:android:67e85e26f18fcbc8988fa8",
+        "android_client_info": {
+          "package_name": "com.example.origenes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXAr-Xj1oCA5CLJjBV2ye15dohgXjUnh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
