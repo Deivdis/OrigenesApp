@@ -5,13 +5,15 @@ public class Producto {
     private String descripcion;
     private String precio;
     private int categoriaId;
+    private String urlImagen; // Nuevo campo para la URL de la imagen
 
-    public Producto(int id, String nombre, String descripcion, String precio, int categoriaId) {
+    public Producto(int id, String nombre, String descripcion, String precio, int categoriaId, String urlImagen) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.categoriaId = categoriaId;
+        this.urlImagen = urlImagen;
     }
 
     // Getters y setters
@@ -20,4 +22,5 @@ public class Producto {
     public String getDescripcion() { return descripcion; }
     public String getPrecio() { return precio; }
     public int getCategoriaId() { return categoriaId; }
+    public String getUrlImagen() { return urlImagen; } // Getter para la URL de la imagen
 }

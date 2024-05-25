@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public class Productos extends AppCompatActivity {
 
     private OrigenesBD origenesBD;
@@ -32,7 +31,7 @@ public class Productos extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         productosList = obtenerProductos();
-        productoAdapter = new ProductoAdapter(productosList);
+        productoAdapter = new ProductoAdapter(productosList, this);
         recyclerView.setAdapter(productoAdapter);
     }
 
@@ -48,8 +47,9 @@ public class Productos extends AppCompatActivity {
                 String descripcion = cursor.getString(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_DESCRIPCION));
                 String precio = cursor.getString(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_PRECIO));
                 int categoriaId = cursor.getInt(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_CATEGORIA_ID));
+                String urlImagen = cursor.getString(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_URL_IMAGEN)); // Obtener la URL de la imagen de la base de datos
 
-                Producto producto = new Producto(id, nombre, descripcion, precio, categoriaId);
+                Producto producto = new Producto(id, nombre, descripcion, precio, categoriaId, urlImagen);
                 productos.add(producto);
             } while (cursor.moveToNext());
         }
