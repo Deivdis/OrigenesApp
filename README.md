@@ -1,2 +1,2 @@
 # App Origenes
-#By Deivdis & Jose Alejandro
+#By Deivids & Jose Alejandro
