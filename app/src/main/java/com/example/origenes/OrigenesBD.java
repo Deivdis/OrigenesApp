@@ -2,11 +2,16 @@ package com.example.origenes;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class OrigenesBD extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "origenes.db";
@@ -35,6 +40,11 @@ public class OrigenesBD extends SQLiteOpenHelper {
     // Columnas de la tabla Categorias
     public static final String COLUMNA_CATEGORIA_ID = "Id";
     public static final String COLUMNA_CATEGORIA_NOMBRE = "Nombre";
+
+    // Columnas para el slider
+    public static final String TABLA_SLIDER = "slider";
+    public static final String COLUMNA_SLIDER_ID = "Id";
+    public static final String COLUMNA_SLIDER_URL_IMAGEN = "UrlImagen";
 
     // Crear tabla Usuarios
     private static final String CREAR_TABLA_USUARIOS = "CREATE TABLE " + TABLA_USUARIOS +
@@ -65,6 +75,14 @@ public class OrigenesBD extends SQLiteOpenHelper {
             COLUMNA_PRODUCTO_URL_IMAGEN + " TEXT, " + // Variable URL de imagen
             "FOREIGN KEY(" + COLUMNA_PRODUCTO_CATEGORIA_ID + ") REFERENCES " + TABLA_CATEGORIAS + "(" + COLUMNA_CATEGORIA_ID + ")" +
             ")";
+
+    // Crear tabla Slider
+    private static final String CREAR_TABLA_SLIDER = "CREATE TABLE " + TABLA_SLIDER +
+            "(" +
+            COLUMNA_SLIDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMNA_SLIDER_URL_IMAGEN + " TEXT" +
+            ")";
+
     public OrigenesBD(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -74,7 +92,9 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.execSQL(CREAR_TABLA_USUARIOS);
         db.execSQL(CREAR_TABLA_CATEGORIAS);
         db.execSQL(CREAR_TABLA_PRODUCTOS);
+        db.execSQL(CREAR_TABLA_SLIDER); // Crear tabla slider
         agregarProductos(db); // Llamar al método de inserción de datos de ejemplo al crear la base de datos
+        agregarImagenesSlider(db); // Agregar imágenes del slider
     }
 
     @Override
@@ -82,6 +102,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLA_USUARIOS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLA_PRODUCTOS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLA_CATEGORIAS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLA_SLIDER);
         onCreate(db);
     }
 
@@ -101,7 +122,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
             }
         }
 
-        // categoria Suplementos
+        // Insertar productos
         values = new ContentValues();
         values.put(COLUMNA_PRODUCTO_NOMBRE, "Omega 3");
         values.put(COLUMNA_PRODUCTO_DESCRIPCION, "Suplemento de aceite de pescado.");
@@ -112,7 +133,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
         if (productoId1 == -1) {
             Log.e("OrigenesBD", "Error inserting product: Omega 3");
         }
-        // categoria Herbales
+
         values = new ContentValues();
         values.put(COLUMNA_PRODUCTO_NOMBRE, "Té Verde");
         values.put(COLUMNA_PRODUCTO_DESCRIPCION, "Bebida de hojas de té verde.");
@@ -123,7 +144,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
         if (productoId2 == -1) {
             Log.e("OrigenesBD", "Error inserting product: Té Verde");
         }
-        // categoria Vitaminas
+
         values = new ContentValues();
         values.put(COLUMNA_PRODUCTO_NOMBRE, "Vitamina C");
         values.put(COLUMNA_PRODUCTO_DESCRIPCION, "Suplemento de vitamina C.");
@@ -134,10 +155,10 @@ public class OrigenesBD extends SQLiteOpenHelper {
         if (productoId3 == -1) {
             Log.e("OrigenesBD", "Error inserting product: Vitamina C");
         }
-        // categoria Minerales
+
         values = new ContentValues();
         values.put(COLUMNA_PRODUCTO_NOMBRE, "Calcio");
-        values.put(COLUMNA_PRODUCTO_DESCRIPCION, "Calcio es el principal fuente de minerales para los huesos fuertes.");
+        values.put(COLUMNA_PRODUCTO_DESCRIPCION, "El calcio es la principal fuente de minerales para los huesos");
         values.put(COLUMNA_PRODUCTO_PRECIO, "20.00");
         values.put(COLUMNA_PRODUCTO_CATEGORIA_ID, 4); // Minerales
         values.put(COLUMNA_PRODUCTO_URL_IMAGEN, "https://naturesbounty.com/cdn/shop/products/004290.png?v=1667506484&width=550");
@@ -145,5 +166,38 @@ public class OrigenesBD extends SQLiteOpenHelper {
         if (productoId4 == -1) {
             Log.e("OrigenesBD", "Error inserting product: Calcio");
         }
+    }
+
+    public void agregarImagenesSlider(SQLiteDatabase db) {
+        String[] urlsImagenes = {
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHvQDLQnhJuGi2GsJMESGV6MDfMLtBf4lP71V-mBc1GZvqlac8NMqyrO3iXaRiphAab4A&usqp=CAU",
+                "https://www.regiondigital.com/m/p/745x450/media/files/106569_medicinabio.jpg",
+                "https://www.elaesi.edu.mx/wp-content/uploads/2021/07/medicina-naturista-alternativa.jpg"
+        };
+
+        ContentValues values;
+        for (String url : urlsImagenes) {
+            values = new ContentValues();
+            values.put(COLUMNA_SLIDER_URL_IMAGEN, url);
+            long sliderId = db.insert(TABLA_SLIDER, null, values);
+            if (sliderId == -1) {
+                Log.e("OrigenesBD", "Error inserting slider image: " + url);
+            }
+        }
+    }
+
+    public List<String> obtenerUrlsImagenesSlider() {
+        List<String> urls = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMNA_SLIDER_URL_IMAGEN + " FROM " + TABLA_SLIDER, null);
+
+        if (((Cursor) cursor).moveToFirst()) {
+            do {
+                urls.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return urls;
     }
 }

@@ -8,6 +8,18 @@
     tools:context=".Login"
     >
 
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="469dp"
+        android:layout_height="992dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.226"
+        app:srcCompat="@drawable/grandient_color_background_lint" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="358dp"
@@ -37,29 +49,39 @@
         <LinearLayout
             android:layout_width="315dp"
             android:layout_height="138dp"
-            android:background="@drawable/container_login"
-            android:orientation="vertical"
             android:layout_marginStart="20dp"
             android:layout_marginTop="30dp"
-            >
+            android:background="@drawable/container_login"
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/et2Correo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="80dp"
+                android:layout_width="246dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/edittext_bg"
+                android:drawablePadding="8dp"
                 android:ems="10"
                 android:hint="Correo"
-                android:inputType="textEmailAddress" />
+                android:padding="8dp"
+                android:inputType="textEmailAddress"/>
 
             <EditText
                 android:id="@+id/et2Contraseña"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="80dp"
+                android:layout_width="246dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/edittext_bg"
+                android:drawablePadding="8dp"
                 android:ems="10"
                 android:hint="Contraseña"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:padding="8dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -84,7 +106,7 @@
         android:textColor="#494949"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.082"
+        app:layout_constraintHorizontal_bias="0.069"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.542" />

@@ -45,7 +45,8 @@ public class Login extends AppCompatActivity {
 
                 if (cursor.getCount() > 0) {
                     // Si el usuario existe, iniciar la siguiente actividad
-                    Intent intent = new Intent(Login.this, Productos.class);
+                    Intent intent = new Intent(Login.this, HomeActivity.class);
+                    //Intent intent = new Intent(Login.this, Productos.class);
                     startActivity(intent);
                     finish();
                 } else {

@@ -5,7 +5,7 @@
     android:layout_width="175dp"
     android:layout_height="245dp"
     android:layout_margin="8dp"
-    android:background="@drawable/darker_gray_background"
+    android:background="@android:color/darker_gray"
     android:elevation="3dp">
 
     <ImageView
@@ -19,54 +19,50 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="175dp"
-        android:layout_height="92dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:background="@drawable/white_background"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imagenImageView"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imagenImageView" />
 
     <TextView
         android:id="@+id/nombreTextView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
         android:lines="2"
         android:maxLines="2"
+
         android:textColor="@color/black"
-        android:textSize="17dp"
+        android:textSize="14dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/descripcionTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.148"
+        app:layout_constraintHorizontal_bias="0.089"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imagenImageView"
-        app:layout_constraintVertical_bias="0.0" />
+        tools:layout_editor_absoluteY="154dp" />
+
+    <TextView
+        android:id="@+id/precioTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="8dp" />
 
     <TextView
         android:id="@+id/descripcionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintHorizontal_bias="0.268"
+        app:layout_constraintHorizontal_bias="0.085"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toBottomOf="@+id/imagenImageView"
-        app:layout_constraintVertical_bias="0.378" />
+        app:layout_constraintVertical_bias="0.506" />
 
-    <TextView
-        android:id="@+id/precioTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/black"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.148"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imagenImageView"
-        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
