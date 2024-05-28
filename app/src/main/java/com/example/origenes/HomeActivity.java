@@ -32,8 +32,11 @@ public class HomeActivity extends AppCompatActivity {
     private ProgressBar progressBarBanner;
     private RecyclerView recyclerViewProducto;
     private ProgressBar progressBarPopular;
+    private RecyclerView recyclerViewCategorias;
     private ProductoAdapter productoAdapter;
+    private CategoriaAdapter categoriaAdapter;
     private List<Producto> productosList;
+    private List<Categoria> categoriasList;
     private OrigenesBD databaseHelper;
     private SharedPreferences sharedPref;
 
@@ -55,22 +58,30 @@ public class HomeActivity extends AppCompatActivity {
         progressBarBanner = findViewById(R.id.progressBarBanner);
         recyclerViewProducto = findViewById(R.id.recyclerViewProducto);
         progressBarPopular = findViewById(R.id.progressBarPopular);
+        recyclerViewCategorias = findViewById(R.id.recyclerViewCategorias);
 
-        // Configurar el RecyclerView
-        recyclerViewProducto.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        // Configurar el RecyclerView de productos
         recyclerViewProducto.setLayoutManager(new GridLayoutManager(this, 2));
 
-        // Inicializar la lista de productos
+        // Configurar el RecyclerView de categorías
+        recyclerViewCategorias.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        // Inicializar las listas de productos y categorías
         productosList = new ArrayList<>();
+        categoriasList = new ArrayList<>();
 
-        // Obtener los productos de la base de datos
-        databaseHelper = new OrigenesBD(this);
-        productosList = obtenerProductos();
-
-        // Inicializar y configurar el adaptador
+        // Inicializar el adaptador de productos
         productoAdapter = new ProductoAdapter(productosList, this);
         recyclerViewProducto.setAdapter(productoAdapter);
 
+        // Inicializar el adaptador de categorías
+        categoriaAdapter = new CategoriaAdapter(categoriasList, this);
+        recyclerViewCategorias.setAdapter(categoriaAdapter);
+
+        // Obtener los productos y categorías de la base de datos
+        databaseHelper = new OrigenesBD(this);
+        obtenerProductos();
+        obtenerCategorias();
         // Ocultar la barra de progreso una vez que se hayan cargado los productos (simulado aquí)
         progressBarPopular.setVisibility(View.GONE);
 
@@ -103,9 +114,7 @@ public class HomeActivity extends AppCompatActivity {
         editor.putBoolean("sessionActive", active);
         editor.apply();
     }
-
-    private List<Producto> obtenerProductos() {
-        List<Producto> productos = new ArrayList<>();
+    private void obtenerProductos() {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + OrigenesBD.TABLA_PRODUCTOS, null);
 
@@ -119,7 +128,7 @@ public class HomeActivity extends AppCompatActivity {
                 String urlImagen = cursor.getString(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_URL_IMAGEN));
 
                 Producto producto = new Producto(id, nombre, descripcion, precio, categoriaId, urlImagen);
-                productos.add(producto);
+                productosList.add(producto);
             } while (cursor.moveToNext());
         }
 
@@ -127,6 +136,26 @@ public class HomeActivity extends AppCompatActivity {
             cursor.close();
         }
 
-        return productos;
+        productoAdapter.notifyDataSetChanged();
+    }
+
+    private void obtenerCategorias() {
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + OrigenesBD.TABLA_CATEGORIAS, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_CATEGORIA_ID));
+                String nombre = cursor.getString(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_CATEGORIA_NOMBRE));
+                Categoria categoria = new Categoria(id, nombre);
+                categoriasList.add(categoria);
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        categoriaAdapter.notifyDataSetChanged();
     }
 }
