@@ -1,6 +1,8 @@
 package com.example.origenes;
-import android.annotation.SuppressLint;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -11,14 +13,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 public class Login extends AppCompatActivity {
 
     private EditText et2Correo, et2Contraseña;
     private Button BtnIngresar, Btn1Ccuenta;
     private SQLiteDatabase db;
+    private SharedPreferences sharedPref;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,27 +29,48 @@ public class Login extends AppCompatActivity {
         et2Correo = findViewById(R.id.et2Correo);
         et2Contraseña = findViewById(R.id.et2Contraseña);
         BtnIngresar = findViewById(R.id.BtnIngresar);
-        Btn1Ccuenta = findViewById(R.id.Btn1Ccuenta); // Initialize the new button
+        Btn1Ccuenta = findViewById(R.id.Btn1Ccuenta);
+
+        // Obtener la instancia de SharedPreferences
+        sharedPref = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
 
         // Abrir la base de datos
         db = openOrCreateDatabase(OrigenesBD.DATABASE_NAME, MODE_PRIVATE, null);
 
+        // Verificar si el usuario ya ha iniciado sesión previamente
+        if (isSessionActive()) {
+            // Si la sesión está activa, dirigir al usuario directamente a la actividad principal
+            goToHomeActivity();
+        }
+
         BtnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String correo = et2Correo.getText().toString();
-                String contrasena = et2Contraseña.getText().toString();
+                String correo = et2Correo.getText().toString().trim();
+                String contrasena = et2Contraseña.getText().toString().trim();
+
+                if (correo.isEmpty() || contrasena.isEmpty()) {
+                    Toast.makeText(Login.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 // Verificar si el usuario existe en la base de datos
-                Cursor cursor;
-                cursor = db.rawQuery("SELECT * FROM "+OrigenesBD.TABLA_USUARIOS+" WHERE "+OrigenesBD.COLUMNA_CORREO+" = ? AND "+OrigenesBD.COLUMNA_CONTRASENA +" = ?", new String[]{correo, contrasena});
+                Cursor cursor = db.rawQuery("SELECT " + OrigenesBD.COLUMNA_CONTRASENA + " FROM " + OrigenesBD.TABLA_USUARIOS + " WHERE " + OrigenesBD.COLUMNA_CORREO + " = ?", new String[]{correo});
 
-                if (cursor.getCount() > 0) {
-                    // Si el usuario existe, iniciar la siguiente actividad
-                    Intent intent = new Intent(Login.this, HomeActivity.class);
-                    //Intent intent = new Intent(Login.this, Productos.class);
-                    startActivity(intent);
-                    finish();
+                if (cursor.moveToFirst()) {
+                    // Obtener la contraseña hash almacenada en la base de datos usando el índice de la columna directamente
+                    String hashedPassword = cursor.getString(0);
+
+                    if (hashedPassword.equals(contrasena)) { // Aquí asumimos que las contraseñas están almacenadas en texto plano
+                        // Guardar el estado de sesión activa en SharedPreferences
+                        setSessionActive(true);
+
+                        // Si la contraseña es correcta, iniciar la siguiente actividad
+                        goToHomeActivity();
+                    } else {
+                        // Si la contraseña es incorrecta, mostrar un mensaje de error
+                        Toast.makeText(Login.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     // Si el usuario no existe, mostrar un mensaje de error
                     Toast.makeText(Login.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
@@ -74,6 +96,24 @@ public class Login extends AppCompatActivity {
         super.onDestroy();
 
         // Cerrar la base de datos
-        db.close();
+        if (db != null && db.isOpen()) {
+            db.close();
+        }
+    }
+
+    private void setSessionActive(boolean active) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("sessionActive", active);
+        editor.apply();
+    }
+
+    private boolean isSessionActive() {
+        return sharedPref.getBoolean("sessionActive", false);
+    }
+
+    private void goToHomeActivity() {
+        Intent intent = new Intent(Login.this, HomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

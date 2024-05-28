@@ -21,6 +21,10 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.widget.Button;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -31,6 +35,7 @@ public class HomeActivity extends AppCompatActivity {
     private ProductoAdapter productoAdapter;
     private List<Producto> productosList;
     private OrigenesBD databaseHelper;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,8 @@ public class HomeActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        sharedPref = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
 
         viewPagerSlider = findViewById(R.id.viewPagerSlider);
         progressBarBanner = findViewById(R.id.progressBarBanner);
@@ -74,6 +81,27 @@ public class HomeActivity extends AppCompatActivity {
 
         // Ocultar la ProgressBar después de configurar el adaptador
         progressBarBanner.setVisibility(View.GONE);
+
+        // Configurar el botón de cerrar sesión
+        Button btnLogout = findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Cerrar sesión: eliminar el indicador de sesión activa en SharedPreferences
+                setSessionActive(false);
+
+                // Redirigir al LoginActivity después de cerrar sesión
+                Intent intent = new Intent(HomeActivity.this, Login.class);
+                startActivity(intent);
+                finish(); // Opcional: Finalizar la actividad actual
+            }
+        });
+    }
+
+    private void setSessionActive(boolean active) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("sessionActive", active);
+        editor.apply();
     }
 
     private List<Producto> obtenerProductos() {

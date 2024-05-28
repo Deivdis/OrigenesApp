@@ -62,6 +62,7 @@
         android:ems="10"
         android:hint="Celular"
         android:inputType="phone"
+        android:maxLength="10"
         app:layout_constraintEnd_toEndOf="@+id/et2Apellido"
         app:layout_constraintTop_toBottomOf="@+id/et2Apellido" />
 
@@ -74,14 +75,31 @@
         android:ems="10"
         android:hint="Contraseña"
         android:inputType="textPassword"
+        android:maxLength="15"
         app:layout_constraintStart_toStartOf="@+id/et2Correo"
         app:layout_constraintTop_toBottomOf="@+id/et2Correo" />
+
+    <EditText
+        android:id="@+id/et2ConfirmarContraseña"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Confirmar contraseña"
+        android:inputType="textPassword"
+        android:maxLength="15"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.478"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et2contraseña"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/Btn2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="104dp"
         android:text="Registrar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

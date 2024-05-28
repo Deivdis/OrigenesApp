@@ -39,6 +39,7 @@ dependencies {
     implementation("com.github.denzcoskun:ImageSlideshow:0.1.2") // Libreria de Imagenes
     implementation ("com.github.bumptech.glide:glide:4.12.0") // Libreria de Glide
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0") // Libreria de Glide
+    implementation ("org.mindrot:jbcrypt:0.4") // Libreria de Bcrypt
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
