@@ -32,7 +32,6 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderView
     @Override
     public void onBindViewHolder(@NonNull SliderViewHolder holder, int position) {
         String imageUrl = imageUrls.get(position);
-        // Utiliza una librería como Picasso o Glide para cargar las imágenes
         Glide.with(context).load(imageUrl).into(holder.imageView);
     }
 

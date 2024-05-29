@@ -40,6 +40,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
     // Columnas de la tabla Categorias
     public static final String COLUMNA_CATEGORIA_ID = "Id";
     public static final String COLUMNA_CATEGORIA_NOMBRE = "Nombre";
+    public static final String COLUMNA_CATEGORIA_URL_IMAGEN = "UrlImagen"; // Nueva columna en la definición de la tabla para las imagenes de las categorias
 
     // Columnas para el slider
     public static final String TABLA_SLIDER = "slider";
@@ -61,7 +62,8 @@ public class OrigenesBD extends SQLiteOpenHelper {
     private static final String CREAR_TABLA_CATEGORIAS = "CREATE TABLE " + TABLA_CATEGORIAS +
             "(" +
             COLUMNA_CATEGORIA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COLUMNA_CATEGORIA_NOMBRE + " TEXT UNIQUE" +
+            COLUMNA_CATEGORIA_NOMBRE + " TEXT UNIQUE, " +
+            COLUMNA_CATEGORIA_URL_IMAGEN + " TEXT" + // Nueva columna en la definición de la tabla para las imagenes de las categorias
             ")";
 
     // Crear tabla Productos
@@ -92,9 +94,10 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.execSQL(CREAR_TABLA_USUARIOS);
         db.execSQL(CREAR_TABLA_CATEGORIAS);
         db.execSQL(CREAR_TABLA_PRODUCTOS);
-        db.execSQL(CREAR_TABLA_SLIDER); // Crear tabla slider
-        agregarProductos(db); // Llamar al método de inserción de datos de ejemplo al crear la base de datos
-        agregarImagenesSlider(db); // Agregar imágenes del slider
+        db.execSQL(CREAR_TABLA_SLIDER);
+        // agregarCategorias(db); // Agregar imagenes del las categorias
+        agregarProductos(db); // Agregar imagenes de los productos
+        agregarImagenesSlider(db); // Agregar imagenes del slider
     }
 
     @Override
@@ -109,7 +112,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
     // Método para insertar datos de ejemplo
     public void agregarProductos(SQLiteDatabase db) {
         // Insertar Categorías
-        String[] categorias = {"Suplementos", "Herbales", "Vitaminas", "Minerales"};
+        String[] categorias = {"Suplementos", "Herbales", "Vitaminas", "Minerales", "Te's"};
         ContentValues values;
 
         for (String categoria : categorias) {

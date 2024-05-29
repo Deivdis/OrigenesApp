@@ -2,10 +2,12 @@ package com.example.origenes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,12 +20,14 @@ public class Registrar extends AppCompatActivity {
 
     EditText et2Nombre, et2Apellido, et2Telefono, et2Correo, et2Contraseña, et2ConfirmarContraseña;
     Button Btn2;
+    ImageButton btnTogglePasswordVisibility, btnToggleConfirmPasswordVisibility;
     MetodosBaseDeDatos dbHelper;
+    boolean isPasswordVisible = false;
+    boolean isConfirmPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registrar);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
@@ -38,9 +42,11 @@ public class Registrar extends AppCompatActivity {
         et2Apellido = findViewById(R.id.et2Apellido);
         et2Telefono = findViewById(R.id.et2Telefono);
         et2Correo = findViewById(R.id.et2Correo);
-        et2Contraseña = findViewById(R.id.et2contraseña);
+        et2Contraseña = findViewById(R.id.et2Contraseña);
         et2ConfirmarContraseña = findViewById(R.id.et2ConfirmarContraseña);
         Btn2 = findViewById(R.id.Btn2);
+        btnTogglePasswordVisibility = findViewById(R.id.btnTogglePasswordVisibility);
+        btnToggleConfirmPasswordVisibility = findViewById(R.id.btnToggleConfirmPasswordVisibility);
 
         Btn2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +107,31 @@ public class Registrar extends AppCompatActivity {
                 }
             }
         });
+
+        btnTogglePasswordVisibility.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePasswordVisibility(et2Contraseña);
+                isPasswordVisible = !isPasswordVisible;
+            }
+        });
+
+        btnToggleConfirmPasswordVisibility.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePasswordVisibility(et2ConfirmarContraseña);
+                isConfirmPasswordVisible = !isConfirmPasswordVisible;
+            }
+        });
+    }
+
+    private void togglePasswordVisibility(EditText editText) {
+        if (editText.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        } else {
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
+        editText.setSelection(editText.getText().length());
     }
 
     private boolean isEmailValid(String email) {

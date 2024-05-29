@@ -9,11 +9,12 @@
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="469dp"
-        android:layout_height="992dp"
+        android:layout_width="487dp"
+        android:layout_height="970dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintBaseline_toBaselineOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/gradient_color_background"/>
+        app:srcCompat="@drawable/gradient_color_background" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -27,72 +28,126 @@
 
         <EditText
             android:id="@+id/et2Nombre"
-            android:layout_width="269dp"
+            android:layout_width="294dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="55dp"
             android:background="@drawable/container_login_buttton"
             android:ems="10"
             android:hint="Nombre"
+            android:padding="12dp"
             android:inputType="text" />
 
         <EditText
             android:id="@+id/et2Apellido"
-            android:layout_width="267dp"
+            android:layout_width="294dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="60dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="30dp"
             android:background="@drawable/container_login_buttton"
             android:ems="10"
+            android:padding="12dp"
             android:hint="Apellido"
             android:inputType="text" />
 
         <EditText
             android:id="@+id/et2Correo"
-            android:layout_width="268dp"
+            android:layout_width="294dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="60dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="30dp"
             android:background="@drawable/container_login_buttton"
             android:ems="10"
+            android:padding="12dp"
             android:hint="Correo"
             android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/et2Telefono"
-            android:layout_width="267dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="60dp"
+            android:layout_width="294dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="30dp"
             android:background="@drawable/container_login_buttton"
             android:ems="10"
             android:hint="Celular"
             android:inputType="phone"
-            android:maxLength="10" />
+            android:maxLength="10"
+            android:padding="12dp" />
 
-        <EditText
-            android:id="@+id/et2contraseña"
-            android:layout_width="268dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/container_login_buttton"
-            android:ems="10"
-            android:hint="Contraseña"
-            android:inputType="textPassword"
-            android:maxLength="15" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="30dp">
 
-        <EditText
-            android:id="@+id/et2ConfirmarContraseña"
-            android:layout_width="269dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/container_login_buttton"
-            android:ems="10"
-            android:hint="Confirmar contraseña"
-            android:inputType="textPassword"
-            android:maxLength="15" />
+            <EditText
+                android:id="@+id/et2Contraseña"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="50dp"
+                android:background="@drawable/container_login_buttton"
+                android:maxLength="15"
+                android:padding="12dp"
+                android:ems="10"
+                android:hint="Contraseña"
+                android:inputType="textPassword"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/btnTogglePasswordVisibility"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/password"
+                app:layout_constraintBottom_toBottomOf="@+id/et2Contraseña"
+                app:layout_constraintEnd_toEndOf="@+id/et2Contraseña"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="30dp">
+
+            <EditText
+                android:id="@+id/et2ConfirmarContraseña"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="50dp"
+                android:background="@drawable/container_login_buttton"
+                android:ems="10"
+                android:hint="Confirmar Contraseña"
+                android:inputType="textPassword"
+                android:maxLength="15"
+                android:padding="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/btnToggleConfirmPasswordVisibility"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/password"
+                app:layout_constraintBottom_toBottomOf="@+id/et2ConfirmarContraseña"
+                app:layout_constraintEnd_toEndOf="@+id/et2ConfirmarContraseña"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
@@ -113,11 +168,14 @@
         android:id="@+id/Txt2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="REGISTRAR"
+        android:layout_marginBottom="18dp"
+        android:text="Reguistrar"
+        android:textSize="20dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.944" />
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -56,21 +56,41 @@
             android:background="@drawable/container_login_buttton"
             android:hint="Correo"
             android:inputType="textEmailAddress"
-            android:padding="8dp" />
+            android:padding="12dp" />
 
-        <EditText
-            android:id="@+id/et2Contraseña"
-            android:layout_width="256dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/container_login_buttton"
-            android:drawablePadding="8dp"
-            android:ems="10"
-            android:hint="Contraseña"
-            android:inputType="textPassword"
-            android:padding="8dp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="82dp">
+
+            <EditText
+                android:id="@+id/et2Contraseña"
+                android:layout_width="256dp"
+                android:layout_height="50dp"
+                android:background="@drawable/container_login_buttton"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:hint="Contraseña"
+                android:inputType="textPassword"
+                android:padding="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/btnTogglePasswordVisibility"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/password"
+                app:layout_constraintBottom_toBottomOf="@+id/et2Contraseña"
+                app:layout_constraintEnd_toEndOf="@+id/et2Contraseña"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/et2Contraseña" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </LinearLayout>
 
     <TextView

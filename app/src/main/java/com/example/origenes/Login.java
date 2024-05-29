@@ -6,10 +6,12 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +21,7 @@ public class Login extends AppCompatActivity {
     private Button BtnIngresar, Btn1Ccuenta;
     private SQLiteDatabase db;
     private SharedPreferences sharedPref;
+    private boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,7 @@ public class Login extends AppCompatActivity {
         et2Contraseña = findViewById(R.id.et2Contraseña);
         BtnIngresar = findViewById(R.id.BtnIngresar);
         Btn1Ccuenta = findViewById(R.id.Btn1Ccuenta);
+        ImageButton btnTogglePasswordVisibility = findViewById(R.id.btnTogglePasswordVisibility);
 
         // Obtener la instancia de SharedPreferences
         sharedPref = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
@@ -42,6 +46,15 @@ public class Login extends AppCompatActivity {
             // Si la sesión está activa, dirigir al usuario directamente a la actividad principal
             goToHomeActivity();
         }
+
+        btnTogglePasswordVisibility.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Cambiar la visibilidad de la contraseña al hacer clic en el botón
+                isPasswordVisible = !isPasswordVisible;
+                togglePasswordVisibility();
+            }
+        });
 
         BtnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,5 +128,18 @@ public class Login extends AppCompatActivity {
         Intent intent = new Intent(Login.this, HomeActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void togglePasswordVisibility() {
+        if (isPasswordVisible) {
+            // Si la contraseña es visible, establecer el tipo de entrada como texto sin ocultar
+            et2Contraseña.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        } else {
+            // Si la contraseña no es visible, establecer el tipo de entrada como texto oculto
+            et2Contraseña.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
+
+        // Mover el cursor al final del texto para mantener la posición del cursor
+        et2Contraseña.setSelection(et2Contraseña.getText().length());
     }
 }

@@ -17,19 +17,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Button;
 
 public class HomeActivity extends AppCompatActivity {
 
     private ViewPager2 viewPagerSlider;
     private ProgressBar progressBarBanner;
+    private ProgressBar progressBarOfficial;
     private RecyclerView recyclerViewProducto;
     private ProgressBar progressBarPopular;
     private RecyclerView recyclerViewCategorias;
@@ -39,11 +40,12 @@ public class HomeActivity extends AppCompatActivity {
     private List<Categoria> categoriasList;
     private OrigenesBD databaseHelper;
     private SharedPreferences sharedPref;
+    private Handler sliderHandler;
+    private List<String> imageUrls; // Añadido: lista de URLs de imágenes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -56,6 +58,7 @@ public class HomeActivity extends AppCompatActivity {
 
         viewPagerSlider = findViewById(R.id.viewPagerSlider);
         progressBarBanner = findViewById(R.id.progressBarBanner);
+        progressBarOfficial = findViewById(R.id.progressBarOfficial);
         recyclerViewProducto = findViewById(R.id.recyclerViewProducto);
         progressBarPopular = findViewById(R.id.progressBarPopular);
         recyclerViewCategorias = findViewById(R.id.recyclerViewCategorias);
@@ -86,12 +89,17 @@ public class HomeActivity extends AppCompatActivity {
         progressBarPopular.setVisibility(View.GONE);
 
         // Configuración del ViewPager y ProgressBar del banner
-        List<String> imageUrls = databaseHelper.obtenerUrlsImagenesSlider();
+        imageUrls = databaseHelper.obtenerUrlsImagenesSlider();
         SliderAdapter sliderAdapter = new SliderAdapter(this, imageUrls);
         viewPagerSlider.setAdapter(sliderAdapter);
 
         // Ocultar la ProgressBar después de configurar el adaptador
         progressBarBanner.setVisibility(View.GONE);
+        progressBarOfficial.setVisibility(View.GONE);
+
+        // Iniciar el auto deslizamiento del slider
+        sliderHandler = new Handler(Looper.getMainLooper());
+        startAutoSlide();
 
         // Configurar el botón de cerrar sesión
         Button btnLogout = findViewById(R.id.btnLogout);
@@ -109,11 +117,31 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    private void startAutoSlide() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                int currentItem = viewPagerSlider.getCurrentItem();
+                int nextItem = (currentItem + 1) % imageUrls.size();
+                viewPagerSlider.setCurrentItem(nextItem, true);
+                sliderHandler.postDelayed(this, 5000); // Cambia la imagen cada 3 segundos
+            }
+        };
+        sliderHandler.postDelayed(runnable, 3000);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sliderHandler.removeCallbacksAndMessages(null);
+    }
+
     private void setSessionActive(boolean active) {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean("sessionActive", active);
         editor.apply();
     }
+
     private void obtenerProductos() {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + OrigenesBD.TABLA_PRODUCTOS, null);
