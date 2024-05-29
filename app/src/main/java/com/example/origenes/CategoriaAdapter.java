@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +31,12 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Categoria categoria = categoriasList.get(position);
         holder.txtNombreCategoria.setText(categoria.getNombre());
+
+        // Cargar imagen desde recursos drawables
+        int imageResourceId = categoria.getImageResourceId();
+        if (imageResourceId != 0) {
+            holder.imgCategoria.setImageResource(imageResourceId);
+        }
     }
 
     @Override
@@ -39,10 +46,12 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtNombreCategoria;
+        ImageView imgCategoria; // Añadido campo de imagen
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtNombreCategoria = itemView.findViewById(R.id.txtNombreCategoria);
+            imgCategoria = itemView.findViewById(R.id.imgCategoria); // Enlazar la imagen
         }
     }
 }

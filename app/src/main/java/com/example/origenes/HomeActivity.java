@@ -41,7 +41,7 @@ public class HomeActivity extends AppCompatActivity {
     private OrigenesBD databaseHelper;
     private SharedPreferences sharedPref;
     private Handler sliderHandler;
-    private List<String> imageUrls; // Añadido: lista de URLs de imágenes
+    private List<Integer> imageResources; // Cambiado: lista de recursos de imágenes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +89,8 @@ public class HomeActivity extends AppCompatActivity {
         progressBarPopular.setVisibility(View.GONE);
 
         // Configuración del ViewPager y ProgressBar del banner
-        imageUrls = databaseHelper.obtenerUrlsImagenesSlider();
-        SliderAdapter sliderAdapter = new SliderAdapter(this, imageUrls);
+        imageResources = databaseHelper.obtenerImagenesSlider();
+        SliderAdapter sliderAdapter = new SliderAdapter(this, imageResources);
         viewPagerSlider.setAdapter(sliderAdapter);
 
         // Ocultar la ProgressBar después de configurar el adaptador
@@ -122,9 +122,9 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void run() {
                 int currentItem = viewPagerSlider.getCurrentItem();
-                int nextItem = (currentItem + 1) % imageUrls.size();
+                int nextItem = (currentItem + 1) % imageResources.size();
                 viewPagerSlider.setCurrentItem(nextItem, true);
-                sliderHandler.postDelayed(this, 5000); // Cambia la imagen cada 3 segundos
+                sliderHandler.postDelayed(this, 5000); // Cambia la imagen cada 5 segundos
             }
         };
         sliderHandler.postDelayed(runnable, 3000);
@@ -153,9 +153,9 @@ public class HomeActivity extends AppCompatActivity {
                 String descripcion = cursor.getString(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_DESCRIPCION));
                 String precio = cursor.getString(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_PRECIO));
                 int categoriaId = cursor.getInt(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_CATEGORIA_ID));
-                String urlImagen = cursor.getString(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_URL_IMAGEN));
+                int imagenRecurso = cursor.getInt(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_IMAGEN_RECURSO));
 
-                Producto producto = new Producto(id, nombre, descripcion, precio, categoriaId, urlImagen);
+                Producto producto = new Producto(id, nombre, descripcion, precio, categoriaId, imagenRecurso);
                 productosList.add(producto);
             } while (cursor.moveToNext());
         }
@@ -175,7 +175,9 @@ public class HomeActivity extends AppCompatActivity {
             do {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_CATEGORIA_ID));
                 String nombre = cursor.getString(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_CATEGORIA_NOMBRE));
-                Categoria categoria = new Categoria(id, nombre);
+                int imagenRecurso = cursor.getInt(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_CATEGORIA_IMAGEN_RECURSO));
+
+                Categoria categoria = new Categoria(id, nombre, imagenRecurso);
                 categoriasList.add(categoria);
             } while (cursor.moveToNext());
         }

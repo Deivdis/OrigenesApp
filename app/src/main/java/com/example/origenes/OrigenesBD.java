@@ -15,11 +15,12 @@ import java.util.List;
 public class OrigenesBD extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "origenes.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
 
     public static final String TABLA_USUARIOS = "usuarios";
     public static final String TABLA_PRODUCTOS = "productos";
     public static final String TABLA_CATEGORIAS = "categorias";
+    public static final String TABLA_SLIDER = "slider";
 
     // Columnas de la tabla Usuarios
     public static final String COLUMNA_ID = "Id";
@@ -35,17 +36,16 @@ public class OrigenesBD extends SQLiteOpenHelper {
     public static final String COLUMNA_PRODUCTO_DESCRIPCION = "Descripcion";
     public static final String COLUMNA_PRODUCTO_PRECIO = "Precio";
     public static final String COLUMNA_PRODUCTO_CATEGORIA_ID = "CategoriaId";
-    public static final String COLUMNA_PRODUCTO_URL_IMAGEN = "UrlImagen"; // Variable URL de imagen
+    public static final String COLUMNA_PRODUCTO_IMAGEN_RECURSO = "ImagenRecurso"; // Recurso de imagen
 
     // Columnas de la tabla Categorias
     public static final String COLUMNA_CATEGORIA_ID = "Id";
     public static final String COLUMNA_CATEGORIA_NOMBRE = "Nombre";
-    public static final String COLUMNA_CATEGORIA_URL_IMAGEN = "UrlImagen"; // Nueva columna en la definición de la tabla para las imagenes de las categorias
+    public static final String COLUMNA_CATEGORIA_IMAGEN_RECURSO = "ImagenRecurso"; // Recurso de imagen
 
     // Columnas para el slider
-    public static final String TABLA_SLIDER = "slider";
     public static final String COLUMNA_SLIDER_ID = "Id";
-    public static final String COLUMNA_SLIDER_URL_IMAGEN = "UrlImagen";
+    public static final String COLUMNA_SLIDER_IMAGEN_RECURSO = "ImagenRecurso"; // Recurso de imagen
 
     // Crear tabla Usuarios
     private static final String CREAR_TABLA_USUARIOS = "CREATE TABLE " + TABLA_USUARIOS +
@@ -63,7 +63,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
             "(" +
             COLUMNA_CATEGORIA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMNA_CATEGORIA_NOMBRE + " TEXT UNIQUE, " +
-            COLUMNA_CATEGORIA_URL_IMAGEN + " TEXT" + // Nueva columna en la definición de la tabla para las imagenes de las categorias
+            COLUMNA_CATEGORIA_IMAGEN_RECURSO + " INTEGER" + // Recurso de imagen
             ")";
 
     // Crear tabla Productos
@@ -74,7 +74,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
             COLUMNA_PRODUCTO_DESCRIPCION + " TEXT, " +
             COLUMNA_PRODUCTO_PRECIO + " TEXT, " +
             COLUMNA_PRODUCTO_CATEGORIA_ID + " INTEGER, " +
-            COLUMNA_PRODUCTO_URL_IMAGEN + " TEXT, " + // Variable URL de imagen
+            COLUMNA_PRODUCTO_IMAGEN_RECURSO + " INTEGER, " + // Recurso de imagen
             "FOREIGN KEY(" + COLUMNA_PRODUCTO_CATEGORIA_ID + ") REFERENCES " + TABLA_CATEGORIAS + "(" + COLUMNA_CATEGORIA_ID + ")" +
             ")";
 
@@ -82,7 +82,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
     private static final String CREAR_TABLA_SLIDER = "CREATE TABLE " + TABLA_SLIDER +
             "(" +
             COLUMNA_SLIDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COLUMNA_SLIDER_URL_IMAGEN + " TEXT" +
+            COLUMNA_SLIDER_IMAGEN_RECURSO + " INTEGER" + // Recurso de imagen
             ")";
 
     public OrigenesBD(@Nullable Context context) {
@@ -95,9 +95,8 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.execSQL(CREAR_TABLA_CATEGORIAS);
         db.execSQL(CREAR_TABLA_PRODUCTOS);
         db.execSQL(CREAR_TABLA_SLIDER);
-        // agregarCategorias(db); // Agregar imagenes del las categorias
-        agregarProductos(db); // Agregar imagenes de los productos
-        agregarImagenesSlider(db); // Agregar imagenes del slider
+        agregarProductos(db); // Agregar productos de ejemplo
+        agregarImagenesSlider(db); // Agregar imágenes del slider de ejemplo
     }
 
     @Override
@@ -111,96 +110,79 @@ public class OrigenesBD extends SQLiteOpenHelper {
 
     // Método para insertar datos de ejemplo
     public void agregarProductos(SQLiteDatabase db) {
-        // Insertar Categorías
-        String[] categorias = {"Suplementos", "Herbales", "Vitaminas", "Minerales", "Te's"};
-        ContentValues values;
+        // Insertar Categorías con recursos de imagen
+        insertarCategoria(db, "Suplementos", R.drawable.suplementos);
+        insertarCategoria(db, "Herbales", R.drawable.herbales);
+        insertarCategoria(db, "Vitaminas", R.drawable.vitaminas);
+        insertarCategoria(db, "Minerales", R.drawable.minerales);
+        insertarCategoria(db, "Especiales", R.drawable.especiales);
 
-        for (String categoria : categorias) {
-            values = new ContentValues();
-            values.put(COLUMNA_CATEGORIA_NOMBRE, categoria);
-            long categoriaId = db.insert(TABLA_CATEGORIAS, null, values);
+        // Insertar productos suplementos
+        insertarProducto(db, "Omega 3", "Suplemento de aceite de pescado.", "25.00", 1, R.drawable.omega3);
+        insertarProducto(db, "Melatonina", "Suplemento para dormir.", "41.341", 1, R.drawable.melatonina);
+        // Insertar productos herbales
+        insertarProducto(db, "Té Verde", "Bebida de hojas de té verde.", "15.00", 2, R.drawable.te_verde);
+        // Insertar productos vitaminas
+        insertarProducto(db, "Vitamina C", "Suplemento de vitamina C.", "10.00", 3, R.drawable.vitamina_c);
+        // Insertar productos minerales
+        insertarProducto(db, "Calcio", "El calcio es la principal fuente de minerales para los huesos", "20.00", 4, R.drawable.calcio);
+        // Insertar productos especiales
+        insertarProducto(db, "Lisina", "Lisina es un aminoácido esencial que no produce", "38.691", 5, R.drawable.lisina);
+        insertarProducto(db, "Carcato Activado", "El carbón activado para eliminar toxicinas no deseadas", "65.798", 5, R.drawable.carcatoactivado);
 
-            if (categoriaId == -1) {
-                Log.e("OrigenesBD", "Error inserting category: " + categoria);
-            }
+    }
+
+    private void insertarCategoria(SQLiteDatabase db, String nombre, int imagenRecurso) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMNA_CATEGORIA_NOMBRE, nombre);
+        values.put(COLUMNA_CATEGORIA_IMAGEN_RECURSO, imagenRecurso);
+        long categoriaId = db.insert(TABLA_CATEGORIAS, null, values);
+        if (categoriaId == -1) {
+            Log.e("OrigenesBD", "Error inserting category: " + nombre);
         }
+    }
 
-        // Insertar productos
-        values = new ContentValues();
-        values.put(COLUMNA_PRODUCTO_NOMBRE, "Omega 3");
-        values.put(COLUMNA_PRODUCTO_DESCRIPCION, "Suplemento de aceite de pescado.");
-        values.put(COLUMNA_PRODUCTO_PRECIO, "25.00");
-        values.put(COLUMNA_PRODUCTO_CATEGORIA_ID, 1); // Suplementos
-        values.put(COLUMNA_PRODUCTO_URL_IMAGEN, "https://www.madewithnestle.ca/sites/default/files/2023-12/Omega-3-D3.png");
-        long productoId1 = db.insert(TABLA_PRODUCTOS, null, values);
-        if (productoId1 == -1) {
-            Log.e("OrigenesBD", "Error inserting product: Omega 3");
-        }
-
-        values = new ContentValues();
-        values.put(COLUMNA_PRODUCTO_NOMBRE, "Té Verde");
-        values.put(COLUMNA_PRODUCTO_DESCRIPCION, "Bebida de hojas de té verde.");
-        values.put(COLUMNA_PRODUCTO_PRECIO, "15.00");
-        values.put(COLUMNA_PRODUCTO_CATEGORIA_ID, 2); // Herbales
-        values.put(COLUMNA_PRODUCTO_URL_IMAGEN, "https://naturesbounty.com/cdn/shop/products/003131.png?v=1667506648&width=550");
-        long productoId2 = db.insert(TABLA_PRODUCTOS, null, values);
-        if (productoId2 == -1) {
-            Log.e("OrigenesBD", "Error inserting product: Té Verde");
-        }
-
-        values = new ContentValues();
-        values.put(COLUMNA_PRODUCTO_NOMBRE, "Vitamina C");
-        values.put(COLUMNA_PRODUCTO_DESCRIPCION, "Suplemento de vitamina C.");
-        values.put(COLUMNA_PRODUCTO_PRECIO, "10.00");
-        values.put(COLUMNA_PRODUCTO_CATEGORIA_ID, 3); // Vitaminas
-        values.put(COLUMNA_PRODUCTO_URL_IMAGEN, "https://naturesbounty.com/cdn/shop/products/001707.png?v=1667506832");
-        long productoId3 = db.insert(TABLA_PRODUCTOS, null, values);
-        if (productoId3 == -1) {
-            Log.e("OrigenesBD", "Error inserting product: Vitamina C");
-        }
-
-        values = new ContentValues();
-        values.put(COLUMNA_PRODUCTO_NOMBRE, "Calcio");
-        values.put(COLUMNA_PRODUCTO_DESCRIPCION, "El calcio es la principal fuente de minerales para los huesos");
-        values.put(COLUMNA_PRODUCTO_PRECIO, "20.00");
-        values.put(COLUMNA_PRODUCTO_CATEGORIA_ID, 4); // Minerales
-        values.put(COLUMNA_PRODUCTO_URL_IMAGEN, "https://naturesbounty.com/cdn/shop/products/004290.png?v=1667506484&width=550");
-        long productoId4 = db.insert(TABLA_PRODUCTOS, null, values);
-        if (productoId4 == -1) {
-            Log.e("OrigenesBD", "Error inserting product: Calcio");
+    private void insertarProducto(SQLiteDatabase db, String nombre, String descripcion, String precio, int categoriaId, int imagenRecurso) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMNA_PRODUCTO_NOMBRE, nombre);
+        values.put(COLUMNA_PRODUCTO_DESCRIPCION, descripcion);
+        values.put(COLUMNA_PRODUCTO_PRECIO, precio);
+        values.put(COLUMNA_PRODUCTO_CATEGORIA_ID, categoriaId);
+        values.put(COLUMNA_PRODUCTO_IMAGEN_RECURSO, imagenRecurso);
+        long productoId = db.insert(TABLA_PRODUCTOS, null, values);
+        if (productoId == -1) {
+            Log.e("OrigenesBD", "Error inserting product: " + nombre);
         }
     }
 
     public void agregarImagenesSlider(SQLiteDatabase db) {
-        String[] urlsImagenes = {
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHvQDLQnhJuGi2GsJMESGV6MDfMLtBf4lP71V-mBc1GZvqlac8NMqyrO3iXaRiphAab4A&usqp=CAU",
-                "https://www.regiondigital.com/m/p/745x450/media/files/106569_medicinabio.jpg",
-                "https://www.elaesi.edu.mx/wp-content/uploads/2021/07/medicina-naturista-alternativa.jpg"
-        };
+        // Insertar imágenes del slider con recursos de imagen
+        insertarImagenSlider(db, R.drawable.slider1);
+        insertarImagenSlider(db, R.drawable.slider2);
+        insertarImagenSlider(db, R.drawable.slider3);
+    }
 
-        ContentValues values;
-        for (String url : urlsImagenes) {
-            values = new ContentValues();
-            values.put(COLUMNA_SLIDER_URL_IMAGEN, url);
-            long sliderId = db.insert(TABLA_SLIDER, null, values);
-            if (sliderId == -1) {
-                Log.e("OrigenesBD", "Error inserting slider image: " + url);
-            }
+    private void insertarImagenSlider(SQLiteDatabase db, int imagenRecurso) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMNA_SLIDER_IMAGEN_RECURSO, imagenRecurso);
+        long sliderId = db.insert(TABLA_SLIDER, null, values);
+        if (sliderId == -1) {
+            Log.e("OrigenesBD", "Error inserting slider image: " + imagenRecurso);
         }
     }
 
-    public List<String> obtenerUrlsImagenesSlider() {
-        List<String> urls = new ArrayList<>();
+    public List<Integer> obtenerImagenesSlider() {
+        List<Integer> imagenes = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + COLUMNA_SLIDER_URL_IMAGEN + " FROM " + TABLA_SLIDER, null);
+        Cursor cursor = db.rawQuery("SELECT " + COLUMNA_SLIDER_IMAGEN_RECURSO + " FROM " + TABLA_SLIDER, null);
 
-        if (((Cursor) cursor).moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
-                urls.add(cursor.getString(0));
+                imagenes.add(cursor.getInt(0));
             } while (cursor.moveToNext());
         }
         cursor.close();
         db.close();
-        return urls;
+        return imagenes;
     }
 }

@@ -18,13 +18,11 @@ import java.util.List;
 
 public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ProductoViewHolder> {
     private List<Producto> productos;
-    private OrigenesBD origenBD;
     private Context context;
 
     public ProductoAdapter(List<Producto> productos, Context context) {
         this.productos = productos;
         this.context = context;
-        this.origenBD = new OrigenesBD(context);
     }
 
     @NonNull
@@ -42,10 +40,10 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.descripcionTextView.setText(producto.getDescripcion());
         holder.precioTextView.setText(producto.getPrecio());
 
-        // Cargar imagen con Picasso
-        String imageUrl = producto.getUrlImagen();
-        if (imageUrl != null && !imageUrl.isEmpty()) {
-            Picasso.get().load(imageUrl).into(holder.imagenProducto);
+        // Cargar imagen desde recursos drawables
+        int imageResourceId = producto.getImageResourceId();
+        if (imageResourceId != 0) {
+            holder.imagenProducto.setImageResource(imageResourceId);
         }
     }
 

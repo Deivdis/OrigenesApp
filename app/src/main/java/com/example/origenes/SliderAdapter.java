@@ -14,38 +14,40 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderViewHolder> {
-    private Context context;
-    private List<String> imageUrls;
 
-    public SliderAdapter(Context context, List<String> imageUrls) {
+    private Context context;
+    private List<Integer> imageResources;
+
+    public SliderAdapter(Context context, List<Integer> imageResources) {
         this.context = context;
-        this.imageUrls = imageUrls;
+        this.imageResources = imageResources;
     }
 
     @NonNull
     @Override
     public SliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.slider_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.slider_item, parent, false);
         return new SliderViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SliderViewHolder holder, int position) {
-        String imageUrl = imageUrls.get(position);
-        Glide.with(context).load(imageUrl).into(holder.imageView);
+        int imageResource = imageResources.get(position);
+        holder.imageView.setImageResource(imageResource);
     }
 
     @Override
     public int getItemCount() {
-        return imageUrls.size();
+        return imageResources.size();
     }
 
     public static class SliderViewHolder extends RecyclerView.ViewHolder {
+
         ImageView imageView;
 
         public SliderViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageView);
+            imageView = itemView.findViewById(R.id.imageViewSlider);
         }
     }
 }
