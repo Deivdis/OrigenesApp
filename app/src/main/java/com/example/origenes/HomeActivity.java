@@ -25,8 +25,9 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Button;
+import java.util.stream.Collectors;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.OnCategoriaClickListener {
 
     private ViewPager2 viewPagerSlider;
     private ProgressBar progressBarBanner;
@@ -85,6 +86,7 @@ public class HomeActivity extends AppCompatActivity {
         databaseHelper = new OrigenesBD(this);
         obtenerProductos();
         obtenerCategorias();
+
         // Ocultar la barra de progreso una vez que se hayan cargado los productos (simulado aquí)
         progressBarPopular.setVisibility(View.GONE);
 
@@ -187,5 +189,14 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         categoriaAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCategoriaClick(Categoria categoria) {
+        // Filtrar productos por la categoría seleccionada
+        List<Producto> filteredProductos = productosList.stream()
+                .filter(producto -> producto.getCategoriaId() == categoria.getId())
+                .collect(Collectors.toList());
+        productoAdapter.setProductos(filteredProductos);
     }
 }

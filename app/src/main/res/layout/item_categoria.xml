@@ -12,8 +12,6 @@
         android:layout_margin="0dp"
         android:clickable="true"
         android:elevation="0dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:foreground="?android:attr/selectableItemBackground"
         android:gravity="center"
         android:padding="8dp"

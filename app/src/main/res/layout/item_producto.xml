@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,7 +8,7 @@
     android:elevation="3dp">
 
     <ImageView
-        android:id="@+id/imagenImageView"
+        android:id="@+id/imgProducto"
         android:layout_width="157dp"
         android:layout_height="153dp"
         android:layout_margin="0dp"
@@ -31,10 +30,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imagenImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imgProducto" />
 
     <TextView
-        android:id="@+id/nombreTextView"
+        android:id="@+id/txtNombreProducto"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:lines="2"
@@ -42,15 +41,15 @@
         android:textColor="@color/black"
         android:textSize="17dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/descripcionTextView"
+        app:layout_constraintBottom_toTopOf="@+id/txtDescripcionProducto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.148"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imagenImageView"
+        app:layout_constraintTop_toBottomOf="@+id/view"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/descripcionTextView"
+        android:id="@+id/txtDescripcionProducto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
@@ -59,11 +58,11 @@
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintHorizontal_bias="0.268"
         app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toBottomOf="@+id/imagenImageView"
+        app:layout_constraintTop_toBottomOf="@+id/txtNombreProducto"
         app:layout_constraintVertical_bias="0.378" />
 
     <TextView
-        android:id="@+id/precioTextView"
+        android:id="@+id/txtPrecioProducto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
@@ -73,7 +72,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.148"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imagenImageView"
+        app:layout_constraintTop_toBottomOf="@+id/view"
         app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

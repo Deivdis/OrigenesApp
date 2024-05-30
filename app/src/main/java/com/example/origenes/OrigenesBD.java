@@ -85,6 +85,14 @@ public class OrigenesBD extends SQLiteOpenHelper {
             COLUMNA_SLIDER_IMAGEN_RECURSO + " INTEGER" + // Recurso de imagen
             ")";
 
+    private static final String CREAR_INDICE_PRODUCTO_CATEGORIA_ID =
+            "CREATE INDEX IF NOT EXISTS idx_producto_categoria_id ON " + TABLA_PRODUCTOS +
+                    "(" + COLUMNA_PRODUCTO_CATEGORIA_ID + ")";
+
+    private static final String CREAR_INDICE_CATEGORIA_ID =
+            "CREATE INDEX IF NOT EXISTS idx_categoria_id ON " + TABLA_CATEGORIAS +
+                    "(" + COLUMNA_CATEGORIA_ID + ")";
+
     public OrigenesBD(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
