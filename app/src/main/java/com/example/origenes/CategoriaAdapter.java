@@ -10,48 +10,59 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.ViewHolder> {
+public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.CategoriaViewHolder> {
 
-    private List<Categoria> categoriasList;
-    private Context context;
+    private List<Categoria> categorias;
+    public static OnCategoriaClickListener onCategoriaClickListener;
 
-    public CategoriaAdapter(List<Categoria> categoriasList, Context context) {
-        this.categoriasList = categoriasList;
-        this.context = context;
+    public CategoriaAdapter(List<Categoria> categorias, OnCategoriaClickListener onCategoriaClickListener) {
+        this.categorias = categorias;
+        this.onCategoriaClickListener = onCategoriaClickListener;
     }
 
-    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CategoriaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_categoria, parent, false);
-        return new ViewHolder(view);
+        return new CategoriaViewHolder(view, onCategoriaClickListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Categoria categoria = categoriasList.get(position);
-        holder.txtNombreCategoria.setText(categoria.getNombre());
-
-        // Cargar imagen desde recursos drawables
-        int imageResourceId = categoria.getImageResourceId();
-        if (imageResourceId != 0) {
-            holder.imgCategoria.setImageResource(imageResourceId);
-        }
+    public void onBindViewHolder(CategoriaViewHolder holder, int position) {
+        Categoria categoria = categorias.get(position);
+        holder.bind(categoria);
     }
 
     @Override
     public int getItemCount() {
-        return categoriasList.size();
+        return categorias.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtNombreCategoria;
-        ImageView imgCategoria; // Añadido campo de imagen
+    public interface OnCategoriaClickListener {
+        void onCategoriaClick(Categoria categoria);
+    }
 
-        public ViewHolder(@NonNull View itemView) {
+    class CategoriaViewHolder extends RecyclerView.ViewHolder {
+        TextView txtNombreCategoria;
+        ImageView imgCategoria;
+        OnCategoriaClickListener onCategoriaClickListener;
+
+        public CategoriaViewHolder(View itemView, OnCategoriaClickListener onCategoriaClickListener) {
             super(itemView);
             txtNombreCategoria = itemView.findViewById(R.id.txtNombreCategoria);
-            imgCategoria = itemView.findViewById(R.id.imgCategoria); // Enlazar la imagen
+            imgCategoria = itemView.findViewById(R.id.imgCategoria);
+            this.onCategoriaClickListener = onCategoriaClickListener;
+            //itemView.setOnClickListener(this);
+        }
+
+        public void bind(Categoria categoria) {
+            txtNombreCategoria.setText(categoria.getNombre());
+            imgCategoria.setImageResource(categoria.getImagenRecurso());
+            imgCategoria.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CategoriaAdapter.onCategoriaClickListener.onCategoriaClick(categorias.get(getAdapterPosition()));
+                }
+            });
         }
     }
 }

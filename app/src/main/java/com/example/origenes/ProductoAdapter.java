@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ProductoViewHolder> {
+
     private List<Producto> productos;
     private Context context;
 
@@ -25,26 +26,16 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         this.context = context;
     }
 
-    @NonNull
     @Override
-    public ProductoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_producto, parent, false);
-        return new ProductoViewHolder(itemView);
+    public ProductoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_producto, parent, false);
+        return new ProductoViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProductoViewHolder holder, int position) {
+    public void onBindViewHolder(ProductoViewHolder holder, int position) {
         Producto producto = productos.get(position);
-
-        holder.nombreTextView.setText(producto.getNombre());
-        holder.descripcionTextView.setText(producto.getDescripcion());
-        holder.precioTextView.setText(producto.getPrecio());
-
-        // Cargar imagen desde recursos drawables
-        int imageResourceId = producto.getImageResourceId();
-        if (imageResourceId != 0) {
-            holder.imagenProducto.setImageResource(imageResourceId);
-        }
+        holder.bind(producto);
     }
 
     @Override
@@ -52,16 +43,30 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         return productos.size();
     }
 
-    static class ProductoViewHolder extends RecyclerView.ViewHolder {
-        TextView nombreTextView, descripcionTextView, precioTextView;
-        ImageView imagenProducto;
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+        notifyDataSetChanged();
+    }
 
-        ProductoViewHolder(View itemView) {
+    class ProductoViewHolder extends RecyclerView.ViewHolder {
+        TextView txtNombreProducto;
+        TextView txtDescripcionProducto;
+        TextView txtPrecioProducto;
+        ImageView imgProducto;
+
+        public ProductoViewHolder(View itemView) {
             super(itemView);
-            imagenProducto = itemView.findViewById(R.id.imagenImageView);
-            nombreTextView = itemView.findViewById(R.id.nombreTextView);
-            descripcionTextView = itemView.findViewById(R.id.descripcionTextView);
-            precioTextView = itemView.findViewById(R.id.precioTextView);
+            txtNombreProducto = itemView.findViewById(R.id.txtNombreProducto);
+            txtDescripcionProducto = itemView.findViewById(R.id.txtDescripcionProducto);
+            txtPrecioProducto = itemView.findViewById(R.id.txtPrecioProducto);
+            imgProducto = itemView.findViewById(R.id.imgProducto);
+        }
+
+        public void bind(Producto producto) {
+            txtNombreProducto.setText(producto.getNombre());
+            txtDescripcionProducto.setText(producto.getDescripcion());
+            txtPrecioProducto.setText(producto.getPrecio());
+            imgProducto.setImageResource(producto.getImageResourceId()); // Utiliza el nuevo método getImageResourceId()
         }
     }
 }

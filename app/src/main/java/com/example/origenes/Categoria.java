@@ -11,7 +11,7 @@ public class Categoria {
         this.imageResourceId = imageResourceId;
     }
 
-    // Getters y Setters
+    // Getters
 
     public int getId() {
         return id;
@@ -24,4 +24,9 @@ public class Categoria {
     public int getImageResourceId() {
         return imageResourceId;
     }
+    public int getImagenRecurso() {
+        return imageResourceId;
+    }
 }
+
+
