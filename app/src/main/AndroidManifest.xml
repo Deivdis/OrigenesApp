@@ -15,6 +15,10 @@
         android:theme="@style/Theme.Origenes"
         tools:targetApi="31">
         <activity
+            android:name=".vistaProducto"
+            android:exported="false"
+            />
+        <activity
             android:name=".HomeActivity"
             android:exported="false" />
         <activity

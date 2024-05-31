@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +44,7 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
     private SharedPreferences sharedPref;
     private Handler sliderHandler;
     private List<Integer> imageResources; // Cambiado: lista de recursos de imágenes
+    private TextView textViewVerTodos; // Declarar el TextView
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
         recyclerViewProducto = findViewById(R.id.recyclerViewProducto);
         progressBarPopular = findViewById(R.id.progressBarPopular);
         recyclerViewCategorias = findViewById(R.id.recyclerViewCategorias);
+        textViewVerTodos = findViewById(R.id.textView8); // Inicializar el TextView
 
         // Configurar el RecyclerView de productos
         recyclerViewProducto.setLayoutManager(new GridLayoutManager(this, 2));
@@ -115,6 +118,15 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
                 Intent intent = new Intent(HomeActivity.this, Login.class);
                 startActivity(intent);
                 finish(); // Opcional: Finalizar la actividad actual
+            }
+        });
+
+        // Configurar el OnClickListener para textViewVerTodos
+        textViewVerTodos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Restablecer la lista de productos para mostrar todos los productos
+                productoAdapter.setProductos(productosList);
             }
         });
     }
