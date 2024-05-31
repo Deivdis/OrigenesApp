@@ -34,45 +34,48 @@
 
     <TextView
         android:id="@+id/txtNombreProducto"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="67dp"
+        android:layout_height="21dp"
         android:lines="2"
         android:maxLines="2"
+        android:text="Nombre"
         android:textColor="@color/black"
         android:textSize="17dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/txtDescripcionProducto"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.148"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/imgProducto"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/txtDescripcionProducto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Descripcion"
         android:textColor="@color/black"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintHorizontal_bias="0.268"
+        app:layout_constraintHorizontal_bias="0.158"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toBottomOf="@+id/txtNombreProducto"
-        app:layout_constraintVertical_bias="0.378" />
+        app:layout_constraintVertical_bias="0.215" />
 
     <TextView
         android:id="@+id/txtPrecioProducto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:text="Precio"
         android:textColor="@color/black"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.148"
+        app:layout_constraintHorizontal_bias="0.122"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/txtNombreProducto"
         app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
