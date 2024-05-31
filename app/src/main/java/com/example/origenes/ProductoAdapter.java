@@ -1,18 +1,16 @@
 package com.example.origenes;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -60,13 +58,32 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
             txtDescripcionProducto = itemView.findViewById(R.id.txtDescripcionProducto);
             txtPrecioProducto = itemView.findViewById(R.id.txtPrecioProducto);
             imgProducto = itemView.findViewById(R.id.imgProducto);
+
+            // Añadir el OnClickListener al itemView
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        Producto producto = productos.get(position);
+
+                        Log.d("ProductoAdapter", "Producto seleccionado: " + producto.getNombre());
+                        Intent intent = new Intent(context, vistaProducto.class);
+                        intent.putExtra("imagenProducto", producto.getImageResourceId());
+                        intent.putExtra("nombreProducto", producto.getNombre());
+                        intent.putExtra("descripcionProducto", producto.getDescripcion());
+                        intent.putExtra("precioProducto", producto.getPrecio());
+                        context.startActivity(intent);
+                    }
+                }
+            });
         }
 
         public void bind(Producto producto) {
             txtNombreProducto.setText(producto.getNombre());
             txtDescripcionProducto.setText(producto.getDescripcion());
             txtPrecioProducto.setText(producto.getPrecio());
-            imgProducto.setImageResource(producto.getImageResourceId()); // Utiliza el nuevo método getImageResourceId()
+            imgProducto.setImageResource(producto.getImageResourceId());
         }
     }
 }
