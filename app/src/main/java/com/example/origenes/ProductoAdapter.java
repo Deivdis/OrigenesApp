@@ -12,15 +12,18 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ProductoViewHolder> {
 
-    private List<Producto> productos;
+    private List<Producto> productoList;
+    private List<Producto> productoListFull;
     private Context context;
 
     public ProductoAdapter(List<Producto> productos, Context context) {
-        this.productos = productos;
+        this.productoList = productos;
+        this.productoListFull = new ArrayList<>(productos);
         this.context = context;
     }
 
@@ -32,17 +35,34 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
 
     @Override
     public void onBindViewHolder(ProductoViewHolder holder, int position) {
-        Producto producto = productos.get(position);
+        Producto producto = productoList.get(position);
         holder.bind(producto);
     }
 
     @Override
     public int getItemCount() {
-        return productos.size();
+        return productoList.size();
     }
 
     public void setProductos(List<Producto> productos) {
-        this.productos = productos;
+        this.productoList = productos;
+        this.productoListFull = new ArrayList<>(productos);
+        notifyDataSetChanged();
+    }
+
+    public void filter(String text) {
+        productoList.clear();
+        if (text.isEmpty()) {
+            productoList.addAll(productoListFull);
+        } else {
+            String filterPattern = text.toLowerCase().trim();
+            for (Producto producto : productoListFull) {
+                if (producto.getNombre().toLowerCase().contains(filterPattern) ||
+                        producto.getDescripcion().toLowerCase().contains(filterPattern)) {
+                    productoList.add(producto);
+                }
+            }
+        }
         notifyDataSetChanged();
     }
 
@@ -65,7 +85,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        Producto producto = productos.get(position);
+                        Producto producto = productoList.get(position);
 
                         Log.d("ProductoAdapter", "Producto seleccionado: " + producto.getNombre());
                         Intent intent = new Intent(context, vistaProducto.class);
@@ -87,3 +107,4 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         }
     }
 }
+

@@ -1,15 +1,21 @@
 package com.example.origenes;
-
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -21,14 +27,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Button;
 import java.util.stream.Collectors;
-
 public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.OnCategoriaClickListener {
 
     private ViewPager2 viewPagerSlider;
@@ -44,8 +43,8 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
     private OrigenesBD databaseHelper;
     private SharedPreferences sharedPref;
     private Handler sliderHandler;
-    private List<Integer> imageResources; // Cambiado: lista de recursos de imágenes
-    private TextView textViewVerTodos; // Declarar el TextView
+    private List<Integer> imageResources;
+    private TextView textViewVerTodos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +65,7 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
         recyclerViewProducto = findViewById(R.id.recyclerViewProducto);
         progressBarPopular = findViewById(R.id.progressBarPopular);
         recyclerViewCategorias = findViewById(R.id.recyclerViewCategorias);
-        textViewVerTodos = findViewById(R.id.textView8); // Inicializar el TextView
+        textViewVerTodos = findViewById(R.id.textView8);
 
         // Configurar el RecyclerView de productos
         recyclerViewProducto.setLayoutManager(new GridLayoutManager(this, 2));
@@ -112,13 +111,10 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Cerrar sesión: eliminar el indicador de sesión activa en SharedPreferences
                 setSessionActive(false);
-
-                // Redirigir al LoginActivity después de cerrar sesión
                 Intent intent = new Intent(HomeActivity.this, Login.class);
                 startActivity(intent);
-                finish(); // Opcional: Finalizar la actividad actual
+                finish();
             }
         });
 
@@ -126,8 +122,23 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
         textViewVerTodos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Restablecer la lista de productos para mostrar todos los productos
                 productoAdapter.setProductos(productosList);
+            }
+        });
+
+        // Configurar el SearchView para buscar productos
+        SearchView searchView = findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                productoAdapter.filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                productoAdapter.filter(newText);
+                return false;
             }
         });
     }
@@ -139,7 +150,7 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
                 int currentItem = viewPagerSlider.getCurrentItem();
                 int nextItem = (currentItem + 1) % imageResources.size();
                 viewPagerSlider.setCurrentItem(nextItem, true);
-                sliderHandler.postDelayed(this, 5000); // Cambia la imagen cada 5 segundos
+                sliderHandler.postDelayed(this, 5000);
             }
         };
         sliderHandler.postDelayed(runnable, 3000);
@@ -206,7 +217,6 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
 
     @Override
     public void onCategoriaClick(Categoria categoria) {
-        // Filtrar productos por la categoría seleccionada
         List<Producto> filteredProductos = productosList.stream()
                 .filter(producto -> producto.getCategoriaId() == categoria.getId())
                 .collect(Collectors.toList());
