@@ -35,6 +35,10 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("androidx.appcompat:appcompat:1.3.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
+    implementation("com.google.android.material:material:1.4.0")
     implementation("com.squareup.picasso:picasso:2.71828") // Libreria de Picasso
     implementation("com.github.denzcoskun:ImageSlideshow:0.1.2") // Libreria de Imagenes
     implementation ("com.github.bumptech.glide:glide:4.12.0") // Libreria de Glide
@@ -43,4 +47,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
 }
