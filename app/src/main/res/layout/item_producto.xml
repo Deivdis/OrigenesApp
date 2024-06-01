@@ -29,22 +29,24 @@
         android:background="@drawable/white_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgProducto" />
+        app:layout_constraintTop_toBottomOf="@+id/imgProducto"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/txtNombreProducto"
-        android:layout_width="67dp"
-        android:layout_height="21dp"
+        android:layout_width="71dp"
+        android:layout_height="25dp"
         android:lines="2"
         android:maxLines="2"
         android:text="Nombre"
         android:textColor="@color/black"
-        android:textSize="17dp"
+        android:textSize="19dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.148"
+        app:layout_constraintHorizontal_bias="0.163"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgProducto"
         app:layout_constraintVertical_bias="0.0" />
@@ -63,19 +65,31 @@
         app:layout_constraintTop_toBottomOf="@+id/txtNombreProducto"
         app:layout_constraintVertical_bias="0.215" />
 
-    <TextView
-        android:id="@+id/txtPrecioProducto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="Precio"
-        android:textColor="@color/black"
-        android:textSize="13sp"
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="20dp"
+        android:layout_height="26dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.122"
+        app:layout_constraintHorizontal_bias="0.103"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/txtNombreProducto"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/imgProducto"
+        app:layout_constraintVertical_bias="0.909"
+        app:srcCompat="@drawable/dollar" />
+
+    <TextView
+        android:id="@+id/txtPrecioProducto"
+        android:layout_width="68dp"
+        android:layout_height="19dp"
+        android:textSize="17sp"
+        android:layout_marginTop="11dp"
+        android:text="Precio"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/imgProducto"
+        app:layout_constraintVertical_bias="0.821" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

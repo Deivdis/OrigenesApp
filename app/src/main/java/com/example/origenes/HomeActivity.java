@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -107,7 +108,7 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
         startAutoSlide();
 
         // Configurar el botón de cerrar sesión
-        Button btnLogout = findViewById(R.id.btnLogout);
+        ImageView btnLogout = findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
