@@ -7,6 +7,15 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
+    <ImageView
+        android:id="@+id/imageView12"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/gradient_header" />
+
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
@@ -24,9 +33,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginEnd="24dp"
                 android:text="Orígenes"
+                android:textColor="@color/black"
                 android:textSize="30sp"
                 android:textStyle="bold"/>
 
@@ -94,8 +104,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Deals of the day"
+                android:textColor="@color/black"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="24dp"
                 android:textSize="20sp"
                 android:textStyle="bold"/>
@@ -136,6 +147,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="24dp"
                 android:text="Categorias"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -176,6 +188,7 @@
                 <TextView
                     android:id="@+id/textView7"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/black"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="10dp"

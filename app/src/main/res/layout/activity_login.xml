@@ -25,7 +25,7 @@
         android:layout_width="358dp"
         android:layout_height="390dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         android:background="@drawable/container_green_bg"
@@ -55,6 +55,7 @@
             android:drawablePadding="8dp"
             android:background="@drawable/container_login_buttton"
             android:hint="Correo"
+            android:textColor="@color/black"
             android:inputType="textEmailAddress"
             android:padding="12dp" />
 
@@ -70,6 +71,7 @@
                 android:drawablePadding="8dp"
                 android:ems="10"
                 android:hint="Contraseña"
+                android:textColor="@color/black"
                 android:inputType="textPassword"
                 android:padding="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -99,6 +101,7 @@
         android:layout_height="30dp"
         android:layout_marginBottom="16dp"
         android:text="Orígenes"
+        android:textColor="@color/black"
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -117,7 +120,7 @@
         app:layout_constraintHorizontal_bias="0.069"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.542" />
+        app:layout_constraintVertical_bias="0.559" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Btn1Ccuenta"
@@ -131,6 +134,6 @@
         app:layout_constraintHorizontal_bias="0.934"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.542" />
+        app:layout_constraintVertical_bias="0.559" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

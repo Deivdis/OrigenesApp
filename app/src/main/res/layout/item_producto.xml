@@ -35,30 +35,34 @@
 
     <TextView
         android:id="@+id/txtNombreProducto"
-        android:layout_width="141dp"
-        android:layout_height="24dp"
+        android:layout_width="142dp"
+        android:layout_height="28dp"
         android:lines="2"
         android:maxLines="2"
         android:text="Nombre"
-        android:textSize="19dp"
+        android:textColor="@color/black"
+        android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintVertical_bias="0.055" />
+        app:layout_constraintVertical_bias="0.047" />
 
     <TextView
         android:id="@+id/txtDescripcionProducto"
         android:layout_width="141dp"
-        android:layout_height="36dp"
+        android:layout_height="30dp"
         android:text="Descripcion"
+        android:textColor="@color/black"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.441"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintVertical_bias="0.508" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -66,10 +70,10 @@
         android:layout_height="26dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.103"
+        app:layout_constraintHorizontal_bias="0.096"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintVertical_bias="0.942"
+        app:layout_constraintVertical_bias="0.938"
         app:srcCompat="@drawable/dollar" />
 
     <TextView
@@ -77,12 +81,13 @@
         android:layout_width="68dp"
         android:layout_height="19dp"
         android:text="Precio"
+        android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.336"
+        app:layout_constraintHorizontal_bias="0.327"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintVertical_bias="0.857" />
+        app:layout_constraintVertical_bias="0.847" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

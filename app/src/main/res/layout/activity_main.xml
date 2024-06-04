@@ -36,7 +36,7 @@
                 android:layout_height="105dp"
                 android:layout_marginStart="24dp"
                 android:text="Bienvenido a la\nTienda Orígenes"
-                android:textColor="@color/white"
+                android:textColor="@color/Blanco"
                 android:textSize="40dp"
                 android:textStyle="bold" />
 
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:text="Disfrutra de un increible viaje a la felicidad"
                 android:textAlignment="center"
-                android:textColor="@color/white" />
+                android:textColor="@color/Blanco" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn0"
@@ -56,7 +56,7 @@
                 android:layout_margin="32dp"
                 android:text="Ingresar"
                 android:background="@drawable/green_bg"
-                android:textColor="@color/black"
+                android:textColor="@color/Negro"
                 />
 
             <View
