@@ -8,8 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 public class MetodosBaseDeDatos {
 
     private SQLiteDatabase db;
-
-    private  OrigenesBD dbHelper;
+    private OrigenesBD dbHelper;
 
     public MetodosBaseDeDatos(Context context) {
         dbHelper = new OrigenesBD(context);
@@ -23,13 +22,30 @@ public class MetodosBaseDeDatos {
         db.close();
     }
 
-    public boolean VerificarUsuario(String nombre) {
+    public boolean VerificarUsuario(String nombre, String apellido) {
         abrir(); // Abre la base de datos para operaciones de lectura
         Cursor cursor = db.query(
                 OrigenesBD.TABLA_USUARIOS, // Nombre de la tabla
                 null, // Columnas que quieres recuperar (null para todas)
-                OrigenesBD.COLUMNA_NOMBRE + " = ?", // Clausula WHERE
-                new String[]{nombre}, // Argumentos para la clausula WHERE
+                OrigenesBD.COLUMNA_NOMBRE + " = ? AND " + OrigenesBD.COLUMNA_APELLIDO + " = ?", // Clausula WHERE
+                new String[]{nombre, apellido}, // Argumentos para la clausula WHERE
+                null, // GROUP BY
+                null, // HAVING
+                null // ORDER BY
+        );
+        boolean existe = (cursor.getCount() > 0);
+        cursor.close();
+        cerrar(); // Cierra la base de datos
+        return existe;
+    }
+
+    public boolean VerificarCorreo(String correo) {
+        abrir(); // Abre la base de datos para operaciones de lectura
+        Cursor cursor = db.query(
+                OrigenesBD.TABLA_USUARIOS, // Nombre de la tabla
+                null, // Columnas que quieres recuperar (null para todas)
+                OrigenesBD.COLUMNA_CORREO + " = ?", // Clausula WHERE
+                new String[]{correo}, // Argumentos para la clausula WHERE
                 null, // GROUP BY
                 null, // HAVING
                 null // ORDER BY
@@ -53,4 +69,3 @@ public class MetodosBaseDeDatos {
         return id;
     }
 }
-

@@ -51,8 +51,8 @@ public class Registrar extends AppCompatActivity {
         Btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nombre = et2Nombre.getText().toString();
-                String apellido = et2Apellido.getText().toString();
+                String nombre = et2Nombre.getText().toString().trim();
+                String apellido = et2Apellido.getText().toString().trim();
                 String telefono = et2Telefono.getText().toString();
                 String correo = et2Correo.getText().toString();
                 String clave = et2Contraseña.getText().toString();
@@ -83,8 +83,18 @@ public class Registrar extends AppCompatActivity {
                     return;
                 }
 
-                if (dbHelper.VerificarUsuario(nombre)) {
-                    Toast.makeText(Registrar.this, "El nombre de usuario ya está en uso", Toast.LENGTH_SHORT).show();
+                if (!isNameValid(nombre)) {
+                    Toast.makeText(Registrar.this, "El nombre no puede tener más de 20 caracteres, ni espacios al principio o al final", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (!isNameValid(apellido)) {
+                    Toast.makeText(Registrar.this, "El apellido no puede tener más de 20 caracteres, ni espacios al principio o al final", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (dbHelper.VerificarCorreo(correo)) {
+                    Toast.makeText(Registrar.this, "El correo electrónico ya está registrado", Toast.LENGTH_SHORT).show();
                 } else {
                     String hashedPassword = hashPassword(clave);
                     long id = dbHelper.agregarUsuario(nombre, apellido, telefono, correo, hashedPassword);
@@ -149,6 +159,10 @@ public class Registrar extends AppCompatActivity {
 
     private boolean isPhoneNumberValid(String phone) {
         return phone.length() == 10 && Pattern.matches("\\d{10}", phone);
+    }
+
+    private boolean isNameValid(String name) {
+        return !name.startsWith(" ") && !name.endsWith(" ") && name.length() <= 20;
     }
 
     private String hashPassword(String password) {
