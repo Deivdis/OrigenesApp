@@ -46,6 +46,24 @@ public class OrigenesBD extends SQLiteOpenHelper {
     // Columnas para el slider
     public static final String COLUMNA_SLIDER_ID = "Id";
     public static final String COLUMNA_SLIDER_IMAGEN_RECURSO = "ImagenRecurso"; // Recurso de imagen
+    //colunmas carrito
+    public static final String TABLA_CARRITO = "carrito";
+    public static final String COLUMNA_CARRITO_ID = "Id";
+    public static final String COLUMNA_CARRITO_USUARIO_ID = "UsuarioId";
+    public static final String COLUMNA_CARRITO_PRODUCTO_ID = "ProductoId";
+    public static final String COLUMNA_CARRITO_CANTIDAD = "Cantidad";
+
+    // Crear tabla Carrito
+    private static final String CREAR_TABLA_CARRITO = "CREATE TABLE " + TABLA_CARRITO +
+            "(" +
+            COLUMNA_CARRITO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMNA_CARRITO_USUARIO_ID + " INTEGER, " +
+            COLUMNA_CARRITO_PRODUCTO_ID + " INTEGER, " +
+            COLUMNA_CARRITO_CANTIDAD + " INTEGER, " +
+            "FOREIGN KEY(" + COLUMNA_CARRITO_USUARIO_ID + ") REFERENCES " + TABLA_USUARIOS + "(" + COLUMNA_ID + "), " +
+            "FOREIGN KEY(" + COLUMNA_CARRITO_PRODUCTO_ID + ") REFERENCES " + TABLA_PRODUCTOS + "(" + COLUMNA_PRODUCTO_ID + ")" +
+            ")";
+
 
     // Crear tabla Usuarios
     private static final String CREAR_TABLA_USUARIOS = "CREATE TABLE " + TABLA_USUARIOS +
@@ -103,6 +121,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.execSQL(CREAR_TABLA_CATEGORIAS);
         db.execSQL(CREAR_TABLA_PRODUCTOS);
         db.execSQL(CREAR_TABLA_SLIDER);
+        db.execSQL(CREAR_TABLA_CARRITO);
         agregarProductos(db); // Agregar productos de ejemplo
         agregarImagenesSlider(db); // Agregar imágenes del slider de ejemplo
     }
@@ -113,6 +132,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLA_PRODUCTOS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLA_CATEGORIAS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLA_SLIDER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLA_CARRITO);
         onCreate(db);
     }
 
@@ -193,4 +213,50 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.close();
         return imagenes;
     }
+    // Insertar producto en el carrito
+    public void agregarProductoAlCarrito(int usuarioId, int productoId, int cantidad) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMNA_CARRITO_USUARIO_ID, usuarioId);
+        values.put(COLUMNA_CARRITO_PRODUCTO_ID, productoId);
+        values.put(COLUMNA_CARRITO_CANTIDAD, cantidad);
+        long carritoId = db.insert(TABLA_CARRITO, null, values);
+        if (carritoId == -1) {
+            Log.e("OrigenesBD", "Error inserting product into cart");
+        }
+        db.close();
+    }
+
+    // Obtener productos del carrito de un usuario específico
+    public List<Producto> obtenerProductosDelCarrito(int usuarioId) {
+        List<Producto> productos = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT p." + COLUMNA_PRODUCTO_ID + ", p." + COLUMNA_PRODUCTO_NOMBRE + ", p." + COLUMNA_PRODUCTO_DESCRIPCION + ", p." + COLUMNA_PRODUCTO_PRECIO + ", c." + COLUMNA_CARRITO_CANTIDAD +
+                " FROM " + TABLA_CARRITO + " c JOIN " + TABLA_PRODUCTOS + " p ON c." + COLUMNA_CARRITO_PRODUCTO_ID + " = p." + COLUMNA_PRODUCTO_ID +
+                " WHERE c." + COLUMNA_CARRITO_USUARIO_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(usuarioId)});
+        if (cursor.moveToFirst()) {
+            do {
+                int idProducto = cursor.getInt(0);
+                String nombre = cursor.getString(1);
+                String descripcion = cursor.getString(2);
+                double precio = cursor.getDouble(3); // Cambio realizado aquí
+                int cantidad = cursor.getInt(4);
+                productos.add(new Producto(idProducto, nombre, descripcion, precio, cantidad));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return productos;
+    }
+
+
+    // Eliminar producto del carrito
+    public void eliminarProductoDelCarrito(int carritoId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int filasAfectadas = db.delete(TABLA_CARRITO, COLUMNA_CARRITO_ID + " = ?", new String[]{String.valueOf(carritoId)});
+        db.close();
+    }
+
 }
+
