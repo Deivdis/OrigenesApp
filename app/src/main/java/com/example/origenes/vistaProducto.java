@@ -2,46 +2,51 @@ package com.example.origenes;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+
 public class vistaProducto extends AppCompatActivity {
 
-    TextView txtNombreProducto;
-    TextView txtDescripcionProducto;
-    TextView txtPrecioProducto;
-    ImageView imgProducto;
+    private TextView txtNombreProducto;
+    private TextView txtDescripcionProducto;
+    private TextView txtPrecioProducto;
+    private ImageView imgProducto;
+    private ArrayList<String> productosEnCarrito;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vista_producto);
+
+        // Configuración inicial
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
+        // Inicialización de componentes de UI
         imgProducto = findViewById(R.id.imgProducto);
         txtNombreProducto = findViewById(R.id.txtNombreProducto);
         txtDescripcionProducto = findViewById(R.id.txtDescripcionProducto);
         txtPrecioProducto = findViewById(R.id.txtPrecioProducto);
 
+        // Obtener datos del Intent
         Intent intent = getIntent();
         String nombreProducto = intent.getStringExtra("nombreProducto");
         String descripcionProducto = intent.getStringExtra("descripcionProducto");
         String precioProducto = intent.getStringExtra("precioProducto");
-        int imagenProducto = intent.getIntExtra("imagenProducto", -1); // -1 es el valor predeterminado en caso de que no se encuentre
+        int imagenProducto = intent.getIntExtra("imagenProducto", -1);
 
+        // Configurar UI con los datos del producto
         txtNombreProducto.setText(nombreProducto);
         txtDescripcionProducto.setText(descripcionProducto);
         txtPrecioProducto.setText(precioProducto);
@@ -49,25 +54,41 @@ public class vistaProducto extends AppCompatActivity {
             imgProducto.setImageResource(imagenProducto);
         }
 
+        // Ajustar márgenes para las barras del sistema
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Find the button by its ID
-        ImageView loginButton = findViewById(R.id.back);
-
-        // Set a click listener on the button
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Create an intent to navigate to the LoginActivity
-                Intent intent = new Intent(vistaProducto.this , HomeActivity.class);
-
-                // Start the LoginActivity
-                startActivity(intent);
-            }
+        // Configurar botón de retroceso
+        ImageView backButton = findViewById(R.id.back);
+        backButton.setOnClickListener(v -> {
+            Intent backIntent = new Intent(vistaProducto.this, HomeActivity.class);
+            startActivity(backIntent);
         });
+
+        // Inicializar lista de productos en el carrito
+        productosEnCarrito = new ArrayList<>();
+
+        // Configurar botón de agregar al carrito
+        AppCompatButton buttonAddToCart = findViewById(R.id.button2);
+        buttonAddToCart.setOnClickListener(v -> {
+            agregarProductoAlCarrito(nombreProducto, precioProducto);
+            abrirCarrito();
+        });
+    }
+
+    private void agregarProductoAlCarrito(String nombreProducto, String precioProducto) {
+        // Lógica para agregar el producto al carrito
+        String producto = nombreProducto + " - " + precioProducto;
+        productosEnCarrito.add(producto);
+    }
+
+    private void abrirCarrito() {
+        // Abrir la actividad del carrito con los productos agregados
+        Intent carritoIntent = new Intent(vistaProducto.this, CarritoActivity.class);
+        carritoIntent.putStringArrayListExtra("productosEnCarrito", productosEnCarrito);
+        startActivity(carritoIntent);
     }
 }

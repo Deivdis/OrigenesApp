@@ -1,4 +1,5 @@
 package com.example.origenes;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,8 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -16,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -28,6 +28,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.OnCategoriaClickListener {
 
     private ViewPager2 viewPagerSlider;
@@ -108,23 +109,15 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
 
         // Configurar el botón de cerrar sesión
         ImageView btnLogout = findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setSessionActive(false);
-                Intent intent = new Intent(HomeActivity.this, Login.class);
-                startActivity(intent);
-                finish();
-            }
+        btnLogout.setOnClickListener(v -> {
+            setSessionActive(false);
+            Intent intent = new Intent(HomeActivity.this, Login.class);
+            startActivity(intent);
+            finish();
         });
 
         // Configurar el OnClickListener para textViewVerTodos
-        textViewVerTodos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                productoAdapter.setProductos(productosList);
-            }
-        });
+        textViewVerTodos.setOnClickListener(v -> productoAdapter.setProductos(productosList));
 
         // Configurar el SearchView para buscar productos
         SearchView searchView = findViewById(R.id.searchView);
@@ -141,17 +134,29 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
                 return false;
             }
         });
+
+        // Configurar el OnClickListener para el ImageView del carrito
+        ImageView cartImageView = findViewById(R.id.imageView6);
+        cartImageView.setOnClickListener(v -> {
+            // Inflar el layout activity_carrito
+            View carritoView = getLayoutInflater().inflate(R.layout.activity_carrito, null);
+
+            // Configurar cualquier otra interacción o lógica relacionada con el carrito aquí
+
+            // Crear un AlertDialog para mostrar el carrito
+            AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+            builder.setView(carritoView);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
     }
 
     private void startAutoSlide() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                int currentItem = viewPagerSlider.getCurrentItem();
-                int nextItem = (currentItem + 1) % imageResources.size();
-                viewPagerSlider.setCurrentItem(nextItem, true);
-                sliderHandler.postDelayed(this, 5000);
-            }
+        Runnable runnable = () -> {
+            int currentItem = viewPagerSlider.getCurrentItem();
+            int nextItem = (currentItem + 1) % imageResources.size();
+            viewPagerSlider.setCurrentItem(nextItem, true);
+           // sliderHandler.postDelayed(this::run, 5000);
         };
         sliderHandler.postDelayed(runnable, 3000);
     }
