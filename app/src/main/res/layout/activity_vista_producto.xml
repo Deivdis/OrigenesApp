@@ -36,7 +36,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:id="@+id/imageView10"
+                        android:id="@+id/imageView52"
                         android:layout_width="match_parent"
                         android:layout_height="370dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -236,7 +236,7 @@
         app:srcCompat="@drawable/btn_2" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/imageView6"
         android:layout_width="35dp"
         android:layout_height="29dp"
         android:layout_marginTop="20dp"

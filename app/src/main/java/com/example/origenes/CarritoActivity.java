@@ -27,6 +27,11 @@ public class CarritoActivity extends AppCompatActivity {
         // Obtener los productos del Intent
         productosEnCarrito = getIntent().getStringArrayListExtra("productosEnCarrito");
 
+        // Verificar si productosEnCarrito es nulo y inicializar si es necesario
+        if (productosEnCarrito == null) {
+            productosEnCarrito = new ArrayList<>();
+        }
+
         // Crear un adaptador para mostrar los productos en el ListView
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, productosEnCarrito);
         listaCarrito.setAdapter(adapter);

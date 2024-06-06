@@ -15,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -135,28 +134,22 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
             }
         });
 
-        // Configurar el OnClickListener para el ImageView del carrito
         ImageView cartImageView = findViewById(R.id.imageView6);
         cartImageView.setOnClickListener(v -> {
-            // Inflar el layout activity_carrito
-            View carritoView = getLayoutInflater().inflate(R.layout.activity_carrito, null);
-
-            // Configurar cualquier otra interacción o lógica relacionada con el carrito aquí
-
-            // Crear un AlertDialog para mostrar el carrito
-            AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-            builder.setView(carritoView);
-            AlertDialog dialog = builder.create();
-            dialog.show();
+            Intent intent = new Intent(HomeActivity.this, CarritoActivity.class);
+            startActivity(intent);
         });
     }
 
     private void startAutoSlide() {
-        Runnable runnable = () -> {
-            int currentItem = viewPagerSlider.getCurrentItem();
-            int nextItem = (currentItem + 1) % imageResources.size();
-            viewPagerSlider.setCurrentItem(nextItem, true);
-           // sliderHandler.postDelayed(this::run, 5000);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                int currentItem = viewPagerSlider.getCurrentItem();
+                int nextItem = (currentItem + 1) % imageResources.size();
+                viewPagerSlider.setCurrentItem(nextItem, true);
+                sliderHandler.postDelayed(this, 5000);
+            }
         };
         sliderHandler.postDelayed(runnable, 3000);
     }
@@ -227,4 +220,5 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
                 .collect(Collectors.toList());
         productoAdapter.setProductos(filteredProductos);
     }
+
 }

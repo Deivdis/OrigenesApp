@@ -20,18 +20,19 @@ public class vistaProducto extends AppCompatActivity {
     private TextView txtDescripcionProducto;
     private TextView txtPrecioProducto;
     private ImageView imgProducto;
+    private OrigenesBD db;
     private ArrayList<String> productosEnCarrito;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vista_producto);
+                protected void onCreate(Bundle savedInstanceState) {
+                    super.onCreate(savedInstanceState);
+                    setContentView(R.layout.activity_vista_producto);
 
-        // Configuración inicial
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
+                    // Configuración inicial
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().hide();
+                    }
 
         // Inicialización de componentes de UI
         imgProducto = findViewById(R.id.imgProducto);
@@ -75,6 +76,11 @@ public class vistaProducto extends AppCompatActivity {
         AppCompatButton buttonAddToCart = findViewById(R.id.button2);
         buttonAddToCart.setOnClickListener(v -> {
             agregarProductoAlCarrito(nombreProducto, precioProducto);
+            abrirCarrito();
+        });
+
+        ImageView carritoImageView = findViewById(R.id.imageView6);
+        carritoImageView.setOnClickListener(v -> {
             abrirCarrito();
         });
     }

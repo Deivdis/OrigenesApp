@@ -21,8 +21,8 @@
 
     <ListView
         android:id="@+id/listaCarrito"
-        android:layout_width="363dp"
-        android:layout_height="636dp"
+        android:layout_width="392dp"
+        android:layout_height="645dp"
         android:layout_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
