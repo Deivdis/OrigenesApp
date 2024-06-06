@@ -8,10 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,9 +99,8 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         public void bind(Producto producto) {
             txtNombreProducto.setText(producto.getNombre());
             txtDescripcionProducto.setText(producto.getDescripcion());
-            txtPrecioProducto.setText(producto.getPrecio());
+            txtPrecioProducto.setText(String.valueOf(producto.getPrecio()));
             imgProducto.setImageResource(producto.getImageResourceId());
         }
     }
 }
-

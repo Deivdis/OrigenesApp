@@ -15,12 +15,13 @@ import java.util.List;
 public class OrigenesBD extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "origenes.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     public static final String TABLA_USUARIOS = "usuarios";
     public static final String TABLA_PRODUCTOS = "productos";
     public static final String TABLA_CATEGORIAS = "categorias";
     public static final String TABLA_SLIDER = "slider";
+    public static final String TABLA_CARRITO = "carrito";
 
     // Columnas de la tabla Usuarios
     public static final String COLUMNA_ID = "Id";
@@ -46,24 +47,12 @@ public class OrigenesBD extends SQLiteOpenHelper {
     // Columnas para el slider
     public static final String COLUMNA_SLIDER_ID = "Id";
     public static final String COLUMNA_SLIDER_IMAGEN_RECURSO = "ImagenRecurso"; // Recurso de imagen
-    //colunmas carrito
-    public static final String TABLA_CARRITO = "carrito";
+
+    // Columnas de la tabla Carrito
     public static final String COLUMNA_CARRITO_ID = "Id";
     public static final String COLUMNA_CARRITO_USUARIO_ID = "UsuarioId";
     public static final String COLUMNA_CARRITO_PRODUCTO_ID = "ProductoId";
     public static final String COLUMNA_CARRITO_CANTIDAD = "Cantidad";
-
-    // Crear tabla Carrito
-    private static final String CREAR_TABLA_CARRITO = "CREATE TABLE " + TABLA_CARRITO +
-            "(" +
-            COLUMNA_CARRITO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COLUMNA_CARRITO_USUARIO_ID + " INTEGER, " +
-            COLUMNA_CARRITO_PRODUCTO_ID + " INTEGER, " +
-            COLUMNA_CARRITO_CANTIDAD + " INTEGER, " +
-            "FOREIGN KEY(" + COLUMNA_CARRITO_USUARIO_ID + ") REFERENCES " + TABLA_USUARIOS + "(" + COLUMNA_ID + "), " +
-            "FOREIGN KEY(" + COLUMNA_CARRITO_PRODUCTO_ID + ") REFERENCES " + TABLA_PRODUCTOS + "(" + COLUMNA_PRODUCTO_ID + ")" +
-            ")";
-
 
     // Crear tabla Usuarios
     private static final String CREAR_TABLA_USUARIOS = "CREATE TABLE " + TABLA_USUARIOS +
@@ -90,7 +79,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
             COLUMNA_PRODUCTO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + // Definir la columna ID_PRODUCTO
             COLUMNA_PRODUCTO_NOMBRE + " TEXT, " +
             COLUMNA_PRODUCTO_DESCRIPCION + " TEXT, " +
-            COLUMNA_PRODUCTO_PRECIO + " TEXT, " +
+            COLUMNA_PRODUCTO_PRECIO + " DOUBLE, " + // Cambiado a DOUBLE
             COLUMNA_PRODUCTO_CATEGORIA_ID + " INTEGER, " +
             COLUMNA_PRODUCTO_IMAGEN_RECURSO + " INTEGER, " + // Recurso de imagen
             "FOREIGN KEY(" + COLUMNA_PRODUCTO_CATEGORIA_ID + ") REFERENCES " + TABLA_CATEGORIAS + "(" + COLUMNA_CATEGORIA_ID + ")" +
@@ -103,13 +92,16 @@ public class OrigenesBD extends SQLiteOpenHelper {
             COLUMNA_SLIDER_IMAGEN_RECURSO + " INTEGER" + // Recurso de imagen
             ")";
 
-    private static final String CREAR_INDICE_PRODUCTO_CATEGORIA_ID =
-            "CREATE INDEX IF NOT EXISTS idx_producto_categoria_id ON " + TABLA_PRODUCTOS +
-                    "(" + COLUMNA_PRODUCTO_CATEGORIA_ID + ")";
-
-    private static final String CREAR_INDICE_CATEGORIA_ID =
-            "CREATE INDEX IF NOT EXISTS idx_categoria_id ON " + TABLA_CATEGORIAS +
-                    "(" + COLUMNA_CATEGORIA_ID + ")";
+    // Crear tabla Carrito
+    private static final String CREAR_TABLA_CARRITO = "CREATE TABLE " + TABLA_CARRITO +
+            "(" +
+            COLUMNA_CARRITO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMNA_CARRITO_USUARIO_ID + " INTEGER, " +
+            COLUMNA_CARRITO_PRODUCTO_ID + " INTEGER, " +
+            COLUMNA_CARRITO_CANTIDAD + " INTEGER, " +
+            "FOREIGN KEY(" + COLUMNA_CARRITO_USUARIO_ID + ") REFERENCES " + TABLA_USUARIOS + "(" + COLUMNA_ID + "), " +
+            "FOREIGN KEY(" + COLUMNA_CARRITO_PRODUCTO_ID + ") REFERENCES " + TABLA_PRODUCTOS + "(" + COLUMNA_PRODUCTO_ID + ")" +
+            ")";
 
     public OrigenesBD(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -128,12 +120,25 @@ public class OrigenesBD extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLA_USUARIOS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLA_PRODUCTOS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLA_CATEGORIAS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLA_SLIDER);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLA_CARRITO);
-        onCreate(db);
+        if (oldVersion < 5) {
+            // Renombrar la tabla antigua
+            db.execSQL("ALTER TABLE " + TABLA_PRODUCTOS + " RENAME TO " + TABLA_PRODUCTOS + "_old");
+
+            // Crear la nueva tabla con la estructura actualizada
+            db.execSQL(CREAR_TABLA_PRODUCTOS);
+
+            // Copiar los datos de la tabla antigua a la nueva tabla
+            db.execSQL("INSERT INTO " + TABLA_PRODUCTOS + " (" + COLUMNA_PRODUCTO_ID + ", " +
+                    COLUMNA_PRODUCTO_NOMBRE + ", " + COLUMNA_PRODUCTO_DESCRIPCION + ", " +
+                    COLUMNA_PRODUCTO_PRECIO + ", " + COLUMNA_PRODUCTO_CATEGORIA_ID + ", " +
+                    COLUMNA_PRODUCTO_IMAGEN_RECURSO + ") SELECT " + COLUMNA_PRODUCTO_ID + ", " +
+                    COLUMNA_PRODUCTO_NOMBRE + ", " + COLUMNA_PRODUCTO_DESCRIPCION + ", " +
+                    "CAST(" + COLUMNA_PRODUCTO_PRECIO + " AS DOUBLE), " + COLUMNA_PRODUCTO_CATEGORIA_ID + ", " +
+                    COLUMNA_PRODUCTO_IMAGEN_RECURSO + " FROM " + TABLA_PRODUCTOS + "_old");
+
+            // Eliminar la tabla antigua
+            db.execSQL("DROP TABLE " + TABLA_PRODUCTOS + "_old");
+        }
     }
 
     // Método para insertar datos de ejemplo
@@ -146,18 +151,17 @@ public class OrigenesBD extends SQLiteOpenHelper {
         insertarCategoria(db, "Especiales", R.drawable.especiales);
 
         // Insertar productos suplementos
-        insertarProducto(db, "Omega 3", "Suplemento de aceite de pescado.", "25.00", 1, R.drawable.omega3);
-        insertarProducto(db, "Melatonina", "Suplemento para dormir.", "41.341", 1, R.drawable.melatonina);
+        insertarProducto(db, "Omega 3", "Suplemento de aceite de pescado.", 25.00, 1, R.drawable.omega3);
+        insertarProducto(db, "Melatonina", "Suplemento para dormir.", 41.341, 1, R.drawable.melatonina);
         // Insertar productos herbales
-        insertarProducto(db, "Té Verde", "Bebida de hojas de té verde.", "15.00", 2, R.drawable.te_verde);
+        insertarProducto(db, "Té Verde", "Bebida de hojas de té verde.", 15.00, 2, R.drawable.te_verde);
         // Insertar productos vitaminas
-        insertarProducto(db, "Vitamina C", "Suplemento de vitamina C.", "10.00", 3, R.drawable.vitamina_c);
+        insertarProducto(db, "Vitamina C", "Suplemento de vitamina C.", 10.00, 3, R.drawable.vitamina_c);
         // Insertar productos minerales
-        insertarProducto(db, "Calcio", "El calcio es la principal fuente de minerales para los huesos", "20.00", 4, R.drawable.calcio);
+        insertarProducto(db, "Calcio", "El calcio es la principal fuente de minerales para los huesos", 20.00, 4, R.drawable.calcio);
         // Insertar productos especiales
-        insertarProducto(db, "Lisina", "Lisina es un aminoácido esencial que no produce", "38.691", 5, R.drawable.lisina);
-        insertarProducto(db, "Carcato Activado", "El carbón activado para eliminar toxicinas no deseadas", "65.798", 5, R.drawable.carcatoactivado);
-
+        insertarProducto(db, "Lisina", "Lisina es un aminoácido esencial que no produce", 38.691, 5, R.drawable.lisina);
+        insertarProducto(db, "Carcato Activado", "El carbón activado para eliminar toxicinas no deseadas", 65.798, 5, R.drawable.carcatoactivado);
     }
 
     private void insertarCategoria(SQLiteDatabase db, String nombre, int imagenRecurso) {
@@ -170,7 +174,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
         }
     }
 
-    private void insertarProducto(SQLiteDatabase db, String nombre, String descripcion, String precio, int categoriaId, int imagenRecurso) {
+    private void insertarProducto(SQLiteDatabase db, String nombre, String descripcion, double precio, int categoriaId, int imagenRecurso) {
         ContentValues values = new ContentValues();
         values.put(COLUMNA_PRODUCTO_NOMBRE, nombre);
         values.put(COLUMNA_PRODUCTO_DESCRIPCION, descripcion);
@@ -213,6 +217,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.close();
         return imagenes;
     }
+
     // Insertar producto en el carrito
     public void agregarProductoAlCarrito(int usuarioId, int productoId, int cantidad) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -250,13 +255,10 @@ public class OrigenesBD extends SQLiteOpenHelper {
         return productos;
     }
 
-
     // Eliminar producto del carrito
     public void eliminarProductoDelCarrito(int carritoId) {
         SQLiteDatabase db = this.getWritableDatabase();
         int filasAfectadas = db.delete(TABLA_CARRITO, COLUMNA_CARRITO_ID + " = ?", new String[]{String.valueOf(carritoId)});
         db.close();
     }
-
 }
-

@@ -3,21 +3,35 @@ public class Producto {
     private int id;
     private String nombre;
     private String descripcion;
-    private String precio;
+    private double precio; // Cambio a double para reflejar el tipo de dato en la base de datos
     private int categoriaId;
     private int imageResourceId; // Nuevo campo para el ID del recurso de imagen
+    private int cantidad;
 
-
-    public Producto(int id, String nombre, String descripcion, String precio, int categoriaId, int imageResourceId) {
+    // Constructor principal
+    public Producto(int id, String nombre, String descripcion, double precio, int categoriaId, int imageResourceId) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.precio = String.valueOf(precio);
+        this.precio = precio;
+        this.categoriaId = categoriaId;
+        this.imageResourceId = imageResourceId;
+        this.cantidad = 0; // Valor por defecto
+    }
+
+    // Constructor adicional (si es necesario)
+    public Producto(int id, String nombre, String descripcion, double precio, int cantidad, int categoriaId, int imageResourceId) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.cantidad = cantidad;
         this.categoriaId = categoriaId;
         this.imageResourceId = imageResourceId;
     }
 
     public Producto(int idProducto, String nombre, String descripcion, double precio, int cantidad) {
+
     }
 
     // Getters y Setters
@@ -46,11 +60,11 @@ public class Producto {
         this.descripcion = descripcion;
     }
 
-    public String getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(String precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 
@@ -68,5 +82,13 @@ public class Producto {
 
     public void setImageResourceId(int imageResourceId) {
         this.imageResourceId = imageResourceId;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
     }
 }
