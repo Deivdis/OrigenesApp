@@ -1,53 +1,61 @@
 package com.example.origenes;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.Toast;
-
+import android.util.Log;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CarritoActivity extends AppCompatActivity {
 
-    private ListView listaCarrito;
-    private Button buttonComprar;
-    private ArrayList<String> productosEnCarrito;
-    private OrigenesBD databaseHelper;
+    private OrigenesBD db;
+    private RecyclerView recyclerView;
+    private CarritoAdapter carritoAdapter;
+    private TextView totalTextView;
+    private static final String TAG = "CarritoActivity"; // Agregado para logs
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carrito);
 
-        listaCarrito = findViewById(R.id.listaCarrito);
-        buttonComprar = findViewById(R.id.buttonComprar);
-        databaseHelper = new OrigenesBD(this);
+        db = new OrigenesBD(this);
+        recyclerView = findViewById(R.id.recyclerViewCarrito);
+        totalTextView = findViewById(R.id.totalTextView);
 
-        // Aquí debes obtener el ID del usuario actual, esto es un ejemplo
-        int usuarioId = 1; // Reemplaza con el ID del usuario actual
+        obtenerProductos();
+    }
 
-        // Obtener los productos del carrito desde la base de datos
-        List<Producto> productosCarrito = databaseHelper.obtenerProductosDelCarrito(usuarioId);
+    private void obtenerProductos() {
+        List<Producto> productosEnCarrito = db.obtenerProductosDelCarrito();
+        imprimirProductos(productosEnCarrito); // Imprime los productos para verificación
+        carritoAdapter = new CarritoAdapter(productosEnCarrito);
 
-        // Convertir la lista de productos a una lista de strings para el adaptador
-        productosEnCarrito = new ArrayList<>();
-        for (Producto producto : productosCarrito) {
-            productosEnCarrito.add(producto.getNombre() + " - " + producto.getDescripcion() + " - " + producto.getPrecio() + " x " + producto.getCantidad());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(carritoAdapter);
+
+        calcularTotal(productosEnCarrito);
+    }
+
+    private void imprimirProductos(List<Producto> productosEnCarrito) {
+        for (Producto producto : productosEnCarrito) {
+            Log.d(TAG, "Producto ID: " + producto.getId());
+            Log.d(TAG, "Nombre: " + producto.getNombre());
+            Log.d(TAG, "Descripción: " + producto.getDescripcion());
+            Log.d(TAG, "Precio: " + producto.getPrecio());
+            Log.d(TAG, "Cantidad: " + producto.getCantidad());
+            Log.d(TAG, "Image Resource ID: " + producto.getImageResourceId());
         }
+    }
 
-        // Crear un adaptador para mostrar los productos en el ListView
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, productosEnCarrito);
-        listaCarrito.setAdapter(adapter);
-
-        // Configurar el botón de comprar
-        buttonComprar.setOnClickListener(v -> {
-            // Lógica para proceder a la compra
-            Toast.makeText(CarritoActivity.this, "Procediendo a la compra...", Toast.LENGTH_SHORT).show();
-        });
+    private void calcularTotal(List<Producto> productosEnCarrito) {
+        double total = 0;
+        for (Producto producto : productosEnCarrito) {
+            total += producto.getPrecio() * producto.getCantidad();
+        }
+        totalTextView.setText(String.format("Total: $%.2f", total));
     }
 }

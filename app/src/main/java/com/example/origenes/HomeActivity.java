@@ -175,7 +175,7 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_ID));
                 String nombre = cursor.getString(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_NOMBRE));
                 String descripcion = cursor.getString(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_DESCRIPCION));
-                double precio = cursor.getDouble(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_PRECIO)); // Cambio a double
+                double precio = cursor.getDouble(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_PRECIO)); // Cambiado a double
                 int categoriaId = cursor.getInt(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_CATEGORIA_ID));
                 int imagenRecurso = cursor.getInt(cursor.getColumnIndexOrThrow(OrigenesBD.COLUMNA_PRODUCTO_IMAGEN_RECURSO));
 
@@ -220,4 +220,5 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
                 .collect(Collectors.toList());
         productoAdapter.setProductos(filteredProductos);
     }
+
 }

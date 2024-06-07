@@ -2,6 +2,7 @@ package com.example.origenes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -14,19 +15,17 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class vistaProducto extends AppCompatActivity {
+
+    private static final String TAG = "vistaProducto"; // Tag para los logs
 
     private TextView txtNombreProducto;
     private TextView txtDescripcionProducto;
     private TextView txtPrecioProducto;
     private ImageView imgProducto;
-    private TextView textViewQuantity;
-    private ImageView imageViewIncrease, imageViewDecrease;
-    private int quantity = 1;
     private OrigenesBD db;
-    private ArrayList<String> productosEnCarrito;
+    private ArrayList<Producto> productosEnCarrito;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +43,11 @@ public class vistaProducto extends AppCompatActivity {
         txtNombreProducto = findViewById(R.id.txtNombreProducto);
         txtDescripcionProducto = findViewById(R.id.txtDescripcionProducto);
         txtPrecioProducto = findViewById(R.id.txtPrecioProducto);
-        textViewQuantity = findViewById(R.id.textView142);
-        imageViewIncrease = findViewById(R.id.imageView9);
-        imageViewDecrease = findViewById(R.id.imageView82);
+        AppCompatButton buttonAddToCart = findViewById(R.id.button2);
+        ImageView backButton = findViewById(R.id.back);
+        ImageView carritoImageView = findViewById(R.id.imageView6);
 
-        // Inicializar la base de datos
+        // Inicialización de la base de datos
         db = new OrigenesBD(this);
 
         // Obtener datos del Intent
@@ -57,12 +56,19 @@ public class vistaProducto extends AppCompatActivity {
         String descripcionProducto = intent.getStringExtra("descripcionProducto");
         double precioProducto = intent.getDoubleExtra("precioProducto", 0.0);
         int imagenProducto = intent.getIntExtra("imagenProducto", -1);
-        int productoId = intent.getIntExtra("productoId", -1); // Asegúrate de que el ID del producto se pase también
+        int idProducto = intent.getIntExtra("idProducto", -1);
+
+//        // Verificar que los datos se están recibiendo correctamente
+//        Log.d(TAG, "ID Producto: " + idProducto);
+//        Log.d(TAG, "Nombre Producto: " + nombreProducto);
+//        Log.d(TAG, "Descripción Producto: " + descripcionProducto);
+//        Log.d(TAG, "Precio Producto: " + precioProducto);
+//        Log.d(TAG, "Imagen Producto: " + imagenProducto);
 
         // Configurar UI con los datos del producto
         txtNombreProducto.setText(nombreProducto);
         txtDescripcionProducto.setText(descripcionProducto);
-        txtPrecioProducto.setText(String.format(Locale.getDefault(), "%.2f", precioProducto));
+        txtPrecioProducto.setText(String.valueOf(precioProducto));
         if (imagenProducto != -1) {
             imgProducto.setImageResource(imagenProducto);
         }
@@ -75,7 +81,6 @@ public class vistaProducto extends AppCompatActivity {
         });
 
         // Configurar botón de retroceso
-        ImageView backButton = findViewById(R.id.back);
         backButton.setOnClickListener(v -> {
             Intent backIntent = new Intent(vistaProducto.this, HomeActivity.class);
             startActivity(backIntent);
@@ -85,51 +90,28 @@ public class vistaProducto extends AppCompatActivity {
         productosEnCarrito = new ArrayList<>();
 
         // Configurar botón de agregar al carrito
-        AppCompatButton buttonAddToCart = findViewById(R.id.button2);
         buttonAddToCart.setOnClickListener(v -> {
-            // Verificar que el productoId sea válido
-            if (productoId == -1) {
+            if (idProducto != -1) {
+                agregarProductoAlCarrito(idProducto, 1); // Asume cantidad 1 por defecto
+                Toast.makeText(vistaProducto.this, "Producto agregado al carrito", Toast.LENGTH_SHORT).show();
+            } else {
                 Toast.makeText(vistaProducto.this, "Error: Producto no válido", Toast.LENGTH_SHORT).show();
-                return;
             }
-
-            // Obtener el ID del usuario y el producto
-            int usuarioId = 1; // Reemplaza con el ID del usuario actual
-            int cantidad = quantity;
-
-            // Agregar el producto al carrito en la base de datos
-            db.agregarProductoAlCarrito(usuarioId, productoId, cantidad);
-
-            // Mostrar mensaje de confirmación
-            Toast.makeText(vistaProducto.this, "Producto agregado al carrito", Toast.LENGTH_SHORT).show();
-
-            // Abrir el carrito
-            abrirCarrito();
         });
 
-        ImageView carritoImageView = findViewById(R.id.imageView6);
         carritoImageView.setOnClickListener(v -> {
             abrirCarrito();
         });
+    }
 
-        // Configurar los listeners para incrementar y disminuir la cantidad
-        imageViewIncrease.setOnClickListener(v -> {
-            quantity++;
-            textViewQuantity.setText(String.valueOf(quantity));
-        });
-
-        imageViewDecrease.setOnClickListener(v -> {
-            if (quantity > 1) {
-                quantity--;
-                textViewQuantity.setText(String.valueOf(quantity));
-            }
-        });
+    private void agregarProductoAlCarrito(int productoId, int cantidad) {
+        // Lógica para agregar el producto al carrito en la base de datos
+        db.agregarProductoAlCarrito(productoId, cantidad);
     }
 
     private void abrirCarrito() {
-        // Abrir la actividad del carrito con los productos agregados
+        // Abrir la actividad del carrito
         Intent carritoIntent = new Intent(vistaProducto.this, CarritoActivity.class);
-        carritoIntent.putStringArrayListExtra("productosEnCarrito", productosEnCarrito);
         startActivity(carritoIntent);
     }
 }

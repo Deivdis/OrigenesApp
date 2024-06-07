@@ -86,6 +86,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
 
                         Log.d("ProductoAdapter", "Producto seleccionado: " + producto.getNombre());
                         Intent intent = new Intent(context, vistaProducto.class);
+                        intent.putExtra("idProducto", producto.getId());
                         intent.putExtra("imagenProducto", producto.getImageResourceId());
                         intent.putExtra("nombreProducto", producto.getNombre());
                         intent.putExtra("descripcionProducto", producto.getDescripcion());

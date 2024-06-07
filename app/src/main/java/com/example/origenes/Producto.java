@@ -1,14 +1,14 @@
 package com.example.origenes;
+
 public class Producto {
     private int id;
     private String nombre;
     private String descripcion;
-    private double precio; // Cambio a double para reflejar el tipo de dato en la base de datos
+    private double precio;
     private int categoriaId;
-    private int imageResourceId; // Nuevo campo para el ID del recurso de imagen
+    private int imageResourceId;
     private int cantidad;
 
-    // Constructor principal
     public Producto(int id, String nombre, String descripcion, double precio, int categoriaId, int imageResourceId) {
         this.id = id;
         this.nombre = nombre;
@@ -16,22 +16,14 @@ public class Producto {
         this.precio = precio;
         this.categoriaId = categoriaId;
         this.imageResourceId = imageResourceId;
-        this.cantidad = 0; // Valor por defecto
     }
 
-    // Constructor adicional (si es necesario)
-    public Producto(int id, String nombre, String descripcion, double precio, int cantidad, int categoriaId, int imageResourceId) {
-        this.id = id;
+    public Producto(int idProducto, String nombre, String descripcion, double precio, int cantidad) {
+        this.id = idProducto;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.cantidad = cantidad;
-        this.categoriaId = categoriaId;
-        this.imageResourceId = imageResourceId;
-    }
-
-    public Producto(int idProducto, String nombre, String descripcion, double precio, int cantidad) {
-
     }
 
     // Getters y Setters
