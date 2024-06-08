@@ -30,7 +30,7 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
         Producto producto = productosEnCarrito.get(position);
         holder.nombreTextView.setText(producto.getNombre());
         holder.precioTextView.setText(String.format("$%.2f", producto.getPrecio()));
-        holder.cantidadTextView.setText(String.format("Cantidad: %d", producto.getCantidad()));
+        holder.cantidadTextView.setText(String.format("%d", producto.getCantidad()));
         holder.imagenImageView.setImageResource(producto.getImageResourceId());
     }
 

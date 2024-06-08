@@ -26,6 +26,8 @@ public class vistaProducto extends AppCompatActivity {
     private ImageView imgProducto;
     private OrigenesBD db;
     private ArrayList<Producto> productosEnCarrito;
+    private TextView cantidadTextView;
+    private int cantidad = 1; // Cantidad inicial por defecto
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,9 @@ public class vistaProducto extends AppCompatActivity {
         txtNombreProducto = findViewById(R.id.txtNombreProducto);
         txtDescripcionProducto = findViewById(R.id.txtDescripcionProducto);
         txtPrecioProducto = findViewById(R.id.txtPrecioProducto);
+        cantidadTextView = findViewById(R.id.textView142);
+        ImageView imageViewIncrement = findViewById(R.id.imageView9);
+        ImageView imageViewDecrement = findViewById(R.id.imageView82);
         AppCompatButton buttonAddToCart = findViewById(R.id.button2);
         ImageView backButton = findViewById(R.id.back);
         ImageView carritoImageView = findViewById(R.id.imageView6);
@@ -58,12 +63,12 @@ public class vistaProducto extends AppCompatActivity {
         int imagenProducto = intent.getIntExtra("imagenProducto", -1);
         int idProducto = intent.getIntExtra("idProducto", -1);
 
-//        // Verificar que los datos se están recibiendo correctamente
-//        Log.d(TAG, "ID Producto: " + idProducto);
-//        Log.d(TAG, "Nombre Producto: " + nombreProducto);
-//        Log.d(TAG, "Descripción Producto: " + descripcionProducto);
-//        Log.d(TAG, "Precio Producto: " + precioProducto);
-//        Log.d(TAG, "Imagen Producto: " + imagenProducto);
+        // Verificar que los datos se están recibiendo correctamente
+        Log.d(TAG, "ID Producto: " + idProducto);
+        Log.d(TAG, "Nombre Producto: " + nombreProducto);
+        Log.d(TAG, "Descripción Producto: " + descripcionProducto);
+        Log.d(TAG, "Precio Producto: " + precioProducto);
+        Log.d(TAG, "Imagen Producto: " + imagenProducto);
 
         // Configurar UI con los datos del producto
         txtNombreProducto.setText(nombreProducto);
@@ -89,10 +94,29 @@ public class vistaProducto extends AppCompatActivity {
         // Inicializar lista de productos en el carrito
         productosEnCarrito = new ArrayList<>();
 
+        // Configurar ImageView para incrementar la cantidad
+        imageViewIncrement.setOnClickListener(v -> {
+            cantidad++;
+            cantidadTextView.setText(String.valueOf(cantidad));
+        });
+
+        // Configurar ImageView para decrementar la cantidad
+        imageViewDecrement.setOnClickListener(v -> {
+            if (cantidad > 1) { // Evitar que la cantidad sea menor que 1
+                cantidad--;
+                cantidadTextView.setText(String.valueOf(cantidad));
+            }
+        });
+
         // Configurar botón de agregar al carrito
         buttonAddToCart.setOnClickListener(v -> {
             if (idProducto != -1) {
-                agregarProductoAlCarrito(idProducto, 1); // Asume cantidad 1 por defecto
+                if (db.productoExisteEnCarrito(idProducto)) {
+                    int cantidadActual = db.obtenerCantidadProductoEnCarrito(idProducto);
+                    db.actualizarCantidadProductoEnCarrito(idProducto, cantidadActual + cantidad);
+                } else {
+                    agregarProductoAlCarrito(idProducto, cantidad);
+                }
                 Toast.makeText(vistaProducto.this, "Producto agregado al carrito", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(vistaProducto.this, "Error: Producto no válido", Toast.LENGTH_SHORT).show();

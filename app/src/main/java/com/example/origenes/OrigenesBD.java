@@ -245,6 +245,41 @@ public class OrigenesBD extends SQLiteOpenHelper {
         return productos;
     }
 
+    public boolean productoExisteEnCarrito(int productoId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + TABLA_CARRITO + " WHERE " + COLUMNA_CARRITO_PRODUCTO_ID + " = ?",
+                new String[]{String.valueOf(productoId)}
+        );
+        boolean existe = cursor.getCount() > 0;
+        cursor.close();
+        return existe;
+    }
+
+    public void actualizarCantidadProductoEnCarrito(int productoId, int nuevaCantidad) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMNA_CARRITO_CANTIDAD, nuevaCantidad);
+        db.update(TABLA_CARRITO, values, COLUMNA_CARRITO_PRODUCTO_ID + " = ?", new String[]{String.valueOf(productoId)});
+    }
+
+    public int obtenerCantidadProductoEnCarrito(int productoId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT " + COLUMNA_CARRITO_CANTIDAD + " FROM " + TABLA_CARRITO + " WHERE " + COLUMNA_CARRITO_PRODUCTO_ID + " = ?",
+                new String[]{String.valueOf(productoId)}
+        );
+        int cantidad = 0;
+        if (cursor.moveToFirst()) {
+            int cantidadIndex = cursor.getColumnIndex(COLUMNA_CARRITO_CANTIDAD);
+            if (cantidadIndex != -1) {
+                cantidad = cursor.getInt(cantidadIndex);
+            }
+        }
+        cursor.close();
+        return cantidad;
+    }
+
     // Eliminar producto del carrito
     public void eliminarProductoDelCarrito(int carritoId) {
         SQLiteDatabase db = this.getWritableDatabase();
