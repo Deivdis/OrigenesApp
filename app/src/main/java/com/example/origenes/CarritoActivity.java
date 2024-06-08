@@ -17,7 +17,7 @@ public class CarritoActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private CarritoAdapter carritoAdapter;
     private TextView totalTextView;
-    private static final String TAG = "CarritoActivity"; // Agregado para logs
+    private static final String TAG = "CarritoActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,22 +33,18 @@ public class CarritoActivity extends AppCompatActivity {
     }
 
     private void obtenerProductos() {
-        // Recuperar el ID del usuario de SharedPreferences
         SharedPreferences prefs = getSharedPreferences("MyPreferences", MODE_PRIVATE);
         int currentUserId = prefs.getInt("userId", -1);
 
-        // Si no hay un ID de usuario, eso significa que no hay sesión activa
         if (currentUserId == -1) {
-            // Aquí puedes manejar el caso de usuario no encontrado o no logueado
             Log.e(TAG, "No user ID found, user might not be logged in");
             return;
         }
 
-        // Obtener los productos del carrito para el usuario actual
         List<Producto> productosEnCarrito = db.obtenerProductosDelCarrito(currentUserId);
 
-        imprimirProductos(productosEnCarrito); // Imprime los productos para verificación
-        carritoAdapter = new CarritoAdapter(productosEnCarrito, db); // Pasar la base de datos al adapter
+        imprimirProductos(productosEnCarrito);
+        carritoAdapter = new CarritoAdapter(productosEnCarrito, db, currentUserId, total -> totalTextView.setText(String.format("Total: $%.2f", total)));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(carritoAdapter);

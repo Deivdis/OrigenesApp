@@ -13,11 +13,19 @@ import java.util.List;
 public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoViewHolder> {
 
     private List<Producto> productosEnCarrito;
-    private OrigenesBD db; // Añadir referencia a la base de datos
+    private OrigenesBD db;
+    private int currentUserId;
+    private OnTotalChangeListener onTotalChangeListener;
 
-    public CarritoAdapter(List<Producto> productosEnCarrito, OrigenesBD db) {
+    public interface OnTotalChangeListener {
+        void onTotalChanged(double total);
+    }
+
+    public CarritoAdapter(List<Producto> productosEnCarrito, OrigenesBD db, int currentUserId, OnTotalChangeListener listener) {
         this.productosEnCarrito = productosEnCarrito;
-        this.db = db; // Inicializar la base de datos
+        this.db = db;
+        this.currentUserId = currentUserId;
+        this.onTotalChangeListener = listener;
     }
 
     @NonNull
@@ -36,32 +44,43 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
         holder.imagenImageView.setImageResource(producto.getImageResourceId());
 
         holder.increaseQuantityButton.setOnClickListener(v -> {
-            int newQuantity = producto.getCantidad() + 1;
-            producto.setCantidad(newQuantity);
-            db.actualizarCantidadProductoEnCarrito(1, producto.getId(), newQuantity); // Asume userId=1
+            int nuevaCantidad = producto.getCantidad() + 1;
+            db.actualizarCantidadProductoEnCarrito(currentUserId, producto.getId(), nuevaCantidad);
+            producto.setCantidad(nuevaCantidad);
             notifyItemChanged(position);
+            recalcularTotal();
         });
 
         holder.decreaseQuantityButton.setOnClickListener(v -> {
-            int newQuantity = producto.getCantidad() - 1;
-            if (newQuantity > 0) {
-                producto.setCantidad(newQuantity);
-                db.actualizarCantidadProductoEnCarrito(1, producto.getId(), newQuantity); // Asume userId=1
+            int nuevaCantidad = producto.getCantidad() - 1;
+            if (nuevaCantidad > 0) {
+                db.actualizarCantidadProductoEnCarrito(currentUserId, producto.getId(), nuevaCantidad);
+                producto.setCantidad(nuevaCantidad);
                 notifyItemChanged(position);
+                recalcularTotal();
             }
         });
 
         holder.eliminarProductoButton.setOnClickListener(v -> {
-            db.eliminarProductoDelCarrito(1, producto.getId()); // Asume userId=1
+            db.eliminarProductoDelCarrito(currentUserId, producto.getId());
             productosEnCarrito.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, productosEnCarrito.size());
+            recalcularTotal();
         });
     }
 
     @Override
     public int getItemCount() {
         return productosEnCarrito.size();
+    }
+
+    private void recalcularTotal() {
+        double total = 0;
+        for (Producto producto : productosEnCarrito) {
+            total += producto.getPrecio() * producto.getCantidad();
+        }
+        onTotalChangeListener.onTotalChanged(total);
     }
 
     static class CarritoViewHolder extends RecyclerView.ViewHolder {
