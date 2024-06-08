@@ -283,7 +283,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
     // Eliminar producto del carrito
     public void eliminarProductoDelCarrito(int carritoId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        int filasAfectadas = db.delete(TABLA_CARRITO, COLUMNA_CARRITO_ID + " = ?", new String[]{String.valueOf(carritoId)});
+        db.delete(TABLA_CARRITO, COLUMNA_CARRITO_PRODUCTO_ID + " = ?", new String[]{String.valueOf(carritoId)});
         db.close();
     }
 }

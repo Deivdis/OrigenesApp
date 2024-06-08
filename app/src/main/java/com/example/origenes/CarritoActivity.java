@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class CarritoActivity extends AppCompatActivity {
+public class CarritoActivity extends AppCompatActivity implements CarritoAdapter.OnItemChangeListener {
 
     private OrigenesBD db;
     private RecyclerView recyclerView;
@@ -34,7 +34,7 @@ public class CarritoActivity extends AppCompatActivity {
     private void obtenerProductos() {
         List<Producto> productosEnCarrito = db.obtenerProductosDelCarrito();
         imprimirProductos(productosEnCarrito); // Imprime los productos para verificación
-        carritoAdapter = new CarritoAdapter(productosEnCarrito);
+        carritoAdapter = new CarritoAdapter(productosEnCarrito, db, this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(carritoAdapter);
@@ -59,5 +59,11 @@ public class CarritoActivity extends AppCompatActivity {
             total += producto.getPrecio() * producto.getCantidad();
         }
         totalTextView.setText(String.format("Total: $%.2f", total));
+    }
+
+    @Override
+    public void onItemChanged() {
+        List<Producto> productosEnCarrito = db.obtenerProductosDelCarrito();
+        calcularTotal(productosEnCarrito);
     }
 }
