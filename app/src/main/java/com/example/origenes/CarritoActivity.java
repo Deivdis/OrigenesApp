@@ -48,7 +48,7 @@ public class CarritoActivity extends AppCompatActivity {
         List<Producto> productosEnCarrito = db.obtenerProductosDelCarrito(currentUserId);
 
         imprimirProductos(productosEnCarrito); // Imprime los productos para verificación
-        carritoAdapter = new CarritoAdapter(productosEnCarrito);
+        carritoAdapter = new CarritoAdapter(productosEnCarrito, db); // Pasar la base de datos al adapter
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(carritoAdapter);

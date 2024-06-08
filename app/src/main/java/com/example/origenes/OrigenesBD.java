@@ -262,14 +262,16 @@ public class OrigenesBD extends SQLiteOpenHelper {
         return existe;
     }
 
+    // Actualizar la cantidad de un producto en el carrito
     public void actualizarCantidadProductoEnCarrito(int usuarioId, int productoId, int nuevaCantidad) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMNA_CARRITO_CANTIDAD, nuevaCantidad);
         db.update(TABLA_CARRITO, values,
-                COLUMNA_CARRITO_PRODUCTO_ID + " = ? AND " + COLUMNA_CARRITO_USUARIO_ID + " = ?",
-                new String[]{String.valueOf(productoId), String.valueOf(usuarioId)}
+                COLUMNA_CARRITO_USUARIO_ID + " = ? AND " + COLUMNA_CARRITO_PRODUCTO_ID + " = ?",
+                new String[]{String.valueOf(usuarioId), String.valueOf(productoId)}
         );
+        db.close();
     }
 
     public int obtenerCantidadProductoEnCarrito(int usuarioId, int productoId) {
@@ -287,10 +289,13 @@ public class OrigenesBD extends SQLiteOpenHelper {
         return cantidad;
     }
 
-    // Eliminar producto del carrito
-    public void eliminarProductoDelCarrito(int carritoId) {
+    // Eliminar un producto del carrito
+    public void eliminarProductoDelCarrito(int usuarioId, int productoId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        int filasAfectadas = db.delete(TABLA_CARRITO, COLUMNA_CARRITO_ID + " = ?", new String[]{String.valueOf(carritoId)});
+        db.delete(TABLA_CARRITO,
+                COLUMNA_CARRITO_USUARIO_ID + " = ? AND " + COLUMNA_CARRITO_PRODUCTO_ID + " = ?",
+                new String[]{String.valueOf(usuarioId), String.valueOf(productoId)}
+        );
         db.close();
     }
 }

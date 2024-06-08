@@ -13,9 +13,11 @@ import java.util.List;
 public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoViewHolder> {
 
     private List<Producto> productosEnCarrito;
+    private OrigenesBD db; // Añadir referencia a la base de datos
 
-    public CarritoAdapter(List<Producto> productosEnCarrito) {
+    public CarritoAdapter(List<Producto> productosEnCarrito, OrigenesBD db) {
         this.productosEnCarrito = productosEnCarrito;
+        this.db = db; // Inicializar la base de datos
     }
 
     @NonNull
@@ -32,6 +34,29 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
         holder.precioTextView.setText(String.format("$%.2f", producto.getPrecio()));
         holder.cantidadTextView.setText(String.format("%d", producto.getCantidad()));
         holder.imagenImageView.setImageResource(producto.getImageResourceId());
+
+        holder.increaseQuantityButton.setOnClickListener(v -> {
+            int newQuantity = producto.getCantidad() + 1;
+            producto.setCantidad(newQuantity);
+            db.actualizarCantidadProductoEnCarrito(1, producto.getId(), newQuantity); // Asume userId=1
+            notifyItemChanged(position);
+        });
+
+        holder.decreaseQuantityButton.setOnClickListener(v -> {
+            int newQuantity = producto.getCantidad() - 1;
+            if (newQuantity > 0) {
+                producto.setCantidad(newQuantity);
+                db.actualizarCantidadProductoEnCarrito(1, producto.getId(), newQuantity); // Asume userId=1
+                notifyItemChanged(position);
+            }
+        });
+
+        holder.eliminarProductoButton.setOnClickListener(v -> {
+            db.eliminarProductoDelCarrito(1, producto.getId()); // Asume userId=1
+            productosEnCarrito.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, productosEnCarrito.size());
+        });
     }
 
     @Override
@@ -44,6 +69,9 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
         TextView precioTextView;
         TextView cantidadTextView;
         ImageView imagenImageView;
+        ImageView increaseQuantityButton;
+        ImageView decreaseQuantityButton;
+        ImageView eliminarProductoButton;
 
         public CarritoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -51,6 +79,9 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
             precioTextView = itemView.findViewById(R.id.precioProductoTextView);
             cantidadTextView = itemView.findViewById(R.id.cantidadProductoTextView);
             imagenImageView = itemView.findViewById(R.id.imagenProductoImageView);
+            increaseQuantityButton = itemView.findViewById(R.id.increaseQuantityButton);
+            decreaseQuantityButton = itemView.findViewById(R.id.decreaseQuantityButton);
+            eliminarProductoButton = itemView.findViewById(R.id.eliminarProductoButton);
         }
     }
 }
