@@ -50,15 +50,18 @@ public class OrigenesBD extends SQLiteOpenHelper {
     public static final String TABLA_CARRITO = "carrito";
     public static final String COLUMNA_CARRITO_ID = "Id";
     public static final String COLUMNA_CARRITO_PRODUCTO_ID = "ProductoId";
+    public static final String COLUMNA_CARRITO_USUARIO_ID = "UsuarioId";
     public static final String COLUMNA_CARRITO_CANTIDAD = "Cantidad";
 
     // Crear tabla Carrito
     private static final String CREAR_TABLA_CARRITO = "CREATE TABLE " + TABLA_CARRITO +
             "(" +
             COLUMNA_CARRITO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMNA_CARRITO_USUARIO_ID + " INTEGER, " +
             COLUMNA_CARRITO_PRODUCTO_ID + " INTEGER, " +
             COLUMNA_CARRITO_CANTIDAD + " INTEGER, " +
-            "FOREIGN KEY(" + COLUMNA_CARRITO_PRODUCTO_ID + ") REFERENCES " + TABLA_PRODUCTOS + "(" + COLUMNA_PRODUCTO_ID + ")" +
+            "FOREIGN KEY(" + COLUMNA_CARRITO_PRODUCTO_ID + ") REFERENCES " + TABLA_PRODUCTOS + "(" + COLUMNA_PRODUCTO_ID + ")," +
+            "FOREIGN KEY(" + COLUMNA_CARRITO_USUARIO_ID + ") REFERENCES " + TABLA_USUARIOS + "(" + COLUMNA_ID + ")" +
             ")";
 
 
@@ -211,9 +214,10 @@ public class OrigenesBD extends SQLiteOpenHelper {
         return imagenes;
     }
     // Insertar producto en el carrito
-    public void agregarProductoAlCarrito(int productoId, int cantidad) {
+    public void agregarProductoAlCarrito(int usuarioId, int productoId, int cantidad) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(COLUMNA_CARRITO_USUARIO_ID, usuarioId);
         values.put(COLUMNA_CARRITO_PRODUCTO_ID, productoId);
         values.put(COLUMNA_CARRITO_CANTIDAD, cantidad);
         long carritoId = db.insert(TABLA_CARRITO, null, values);
@@ -223,13 +227,14 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Obtener productos del carrito
-    public List<Producto> obtenerProductosDelCarrito() {
+    // Obtener productos del carrito para un usuario específico
+    public List<Producto> obtenerProductosDelCarrito(int usuarioId) {
         List<Producto> productos = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT p." + COLUMNA_PRODUCTO_ID + ", p." + COLUMNA_PRODUCTO_NOMBRE + ", p." + COLUMNA_PRODUCTO_DESCRIPCION + ", p." + COLUMNA_PRODUCTO_PRECIO + ", c." + COLUMNA_CARRITO_CANTIDAD +
-                " FROM " + TABLA_CARRITO + " c JOIN " + TABLA_PRODUCTOS + " p ON c." + COLUMNA_CARRITO_PRODUCTO_ID + " = p." + COLUMNA_PRODUCTO_ID;
-        Cursor cursor = db.rawQuery(query, null);
+                " FROM " + TABLA_CARRITO + " c JOIN " + TABLA_PRODUCTOS + " p ON c." + COLUMNA_CARRITO_PRODUCTO_ID + " = p." + COLUMNA_PRODUCTO_ID +
+                " WHERE c." + COLUMNA_CARRITO_USUARIO_ID + " = ?"; // Añade esta línea
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(usuarioId)}); // Modifica esta línea para pasar el usuarioId
         if (cursor.moveToFirst()) {
             do {
                 int idProducto = cursor.getInt(0);
@@ -245,36 +250,38 @@ public class OrigenesBD extends SQLiteOpenHelper {
         return productos;
     }
 
-    public boolean productoExisteEnCarrito(int productoId) {
+    public boolean productoExisteEnCarrito(int usuarioId, int productoId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(
-                "SELECT * FROM " + TABLA_CARRITO + " WHERE " + COLUMNA_CARRITO_PRODUCTO_ID + " = ?",
-                new String[]{String.valueOf(productoId)}
+                "SELECT * FROM " + TABLA_CARRITO +
+                        " WHERE " + COLUMNA_CARRITO_PRODUCTO_ID + " = ? AND " + COLUMNA_CARRITO_USUARIO_ID + " = ?",
+                new String[]{String.valueOf(productoId), String.valueOf(usuarioId)}
         );
         boolean existe = cursor.getCount() > 0;
         cursor.close();
         return existe;
     }
 
-    public void actualizarCantidadProductoEnCarrito(int productoId, int nuevaCantidad) {
+    public void actualizarCantidadProductoEnCarrito(int usuarioId, int productoId, int nuevaCantidad) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMNA_CARRITO_CANTIDAD, nuevaCantidad);
-        db.update(TABLA_CARRITO, values, COLUMNA_CARRITO_PRODUCTO_ID + " = ?", new String[]{String.valueOf(productoId)});
+        db.update(TABLA_CARRITO, values,
+                COLUMNA_CARRITO_PRODUCTO_ID + " = ? AND " + COLUMNA_CARRITO_USUARIO_ID + " = ?",
+                new String[]{String.valueOf(productoId), String.valueOf(usuarioId)}
+        );
     }
 
-    public int obtenerCantidadProductoEnCarrito(int productoId) {
+    public int obtenerCantidadProductoEnCarrito(int usuarioId, int productoId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(
-                "SELECT " + COLUMNA_CARRITO_CANTIDAD + " FROM " + TABLA_CARRITO + " WHERE " + COLUMNA_CARRITO_PRODUCTO_ID + " = ?",
-                new String[]{String.valueOf(productoId)}
+                "SELECT " + COLUMNA_CARRITO_CANTIDAD + " FROM " + TABLA_CARRITO +
+                        " WHERE " + COLUMNA_CARRITO_PRODUCTO_ID + " = ? AND " + COLUMNA_CARRITO_USUARIO_ID + " = ?",
+                new String[]{String.valueOf(productoId), String.valueOf(usuarioId)}
         );
         int cantidad = 0;
         if (cursor.moveToFirst()) {
-            int cantidadIndex = cursor.getColumnIndex(COLUMNA_CARRITO_CANTIDAD);
-            if (cantidadIndex != -1) {
-                cantidad = cursor.getInt(cantidadIndex);
-            }
+            cantidad = cursor.getInt(0);
         }
         cursor.close();
         return cantidad;

@@ -67,37 +67,34 @@ public class Login extends AppCompatActivity {
                     return;
                 }
 
-                // Verificar si el usuario existe en la base de datos
-                Cursor cursor = db.rawQuery("SELECT " + OrigenesBD.COLUMNA_CONTRASENA + " FROM " + OrigenesBD.TABLA_USUARIOS + " WHERE " + OrigenesBD.COLUMNA_CORREO + " = ?", new String[]{correo});
+                Cursor cursor = null;
+                try {
+                    cursor = db.rawQuery("SELECT " + OrigenesBD.COLUMNA_ID + ", " + OrigenesBD.COLUMNA_CONTRASENA + " FROM " + OrigenesBD.TABLA_USUARIOS + " WHERE " + OrigenesBD.COLUMNA_CORREO + " = ?", new String[]{correo});
+                    if (cursor.moveToFirst()) {
+                        int userId = cursor.getInt(cursor.getColumnIndex(OrigenesBD.COLUMNA_ID));
+                        String hashedPassword = cursor.getString(cursor.getColumnIndex(OrigenesBD.COLUMNA_CONTRASENA));
 
-                if (cursor.moveToFirst()) {
-                    // Obtener la contraseña hash almacenada en la base de datos usando el índice de la columna directamente
-                    String hashedPassword = cursor.getString(0);
-
-                    if (hashedPassword.equals(contrasena)) { // Aquí asumimos que las contraseñas están almacenadas en texto plano
-                        // Guardar el estado de sesión activa en SharedPreferences
-                        setSessionActive(true);
-
-                        // Si la contraseña es correcta, iniciar la siguiente actividad
-                        goToHomeActivity();
+                        if (hashedPassword.equals(contrasena)) {
+                            setSessionActive(true);
+                            saveUserId(userId);
+                            goToHomeActivity();
+                        } else {
+                            Toast.makeText(Login.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        // Si la contraseña es incorrecta, mostrar un mensaje de error
                         Toast.makeText(Login.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    // Si el usuario no existe, mostrar un mensaje de error
-                    Toast.makeText(Login.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
+                } finally {
+                    if (cursor != null && !cursor.isClosed()) {
+                        cursor.close();
+                    }
                 }
-
-                // Cerrar el cursor
-                cursor.close();
             }
         });
 
         Btn1Ccuenta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Iniciar la actividad de registro
                 Intent intent = new Intent(Login.this, Registrar.class);
                 startActivity(intent);
             }
@@ -107,8 +104,6 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        // Cerrar la base de datos
         if (db != null && db.isOpen()) {
             db.close();
         }
@@ -124,6 +119,12 @@ public class Login extends AppCompatActivity {
         return sharedPref.getBoolean("sessionActive", false);
     }
 
+    private void saveUserId(int userId) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("userId", userId);
+        editor.apply();
+    }
+
     private void goToHomeActivity() {
         Intent intent = new Intent(Login.this, HomeActivity.class);
         startActivity(intent);
@@ -132,14 +133,10 @@ public class Login extends AppCompatActivity {
 
     private void togglePasswordVisibility() {
         if (isPasswordVisible) {
-            // Si la contraseña es visible, establecer el tipo de entrada como texto sin ocultar
             et2Contraseña.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
         } else {
-            // Si la contraseña no es visible, establecer el tipo de entrada como texto oculto
             et2Contraseña.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
-
-        // Mover el cursor al final del texto para mantener la posición del cursor
         et2Contraseña.setSelection(et2Contraseña.getText().length());
     }
 }

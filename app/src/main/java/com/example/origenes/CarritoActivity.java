@@ -1,5 +1,6 @@
 package com.example.origenes;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
@@ -32,7 +33,20 @@ public class CarritoActivity extends AppCompatActivity implements CarritoAdapter
     }
 
     private void obtenerProductos() {
-        List<Producto> productosEnCarrito = db.obtenerProductosDelCarrito();
+        // Recuperar el ID del usuario de SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        int currentUserId = prefs.getInt("userId", -1);
+
+        // Si no hay un ID de usuario, eso significa que no hay sesión activa
+        if (currentUserId == -1) {
+            // Aquí puedes manejar el caso de usuario no encontrado o no logueado
+            Log.e(TAG, "No user ID found, user might not be logged in");
+            return;
+        }
+
+        // Obtener los productos del carrito para el usuario actual
+        List<Producto> productosEnCarrito = db.obtenerProductosDelCarrito(currentUserId);
+
         imprimirProductos(productosEnCarrito); // Imprime los productos para verificación
         carritoAdapter = new CarritoAdapter(productosEnCarrito, db, this);
 
