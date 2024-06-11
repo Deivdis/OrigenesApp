@@ -20,7 +20,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -41,11 +44,13 @@ dependencies {
     implementation("com.google.android.material:material:1.4.0")
     implementation("com.squareup.picasso:picasso:2.71828") // Libreria de Picasso
     implementation("com.github.denzcoskun:ImageSlideshow:0.1.2") // Libreria de Imagenes
-    implementation ("com.github.bumptech.glide:glide:4.12.0") // Libreria de Glide
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0") // Libreria de Glide
-    implementation ("org.mindrot:jbcrypt:0.4") // Libreria de Bcrypt
+    implementation("com.github.bumptech.glide:glide:4.12.0") // Libreria de Glide
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0") // Libreria de Glide
+    implementation("org.mindrot:jbcrypt:0.4") // Libreria de Bcrypt
+    implementation("com.stripe:stripe-java:20.77.0") // Libreria de Stripe
+    implementation("com.stripe:stripe-android:17.2.0") // Libreria de Stripe
+    implementation("com.android.volley:volley:1.2.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
 }
