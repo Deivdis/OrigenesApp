@@ -54,7 +54,7 @@ public class vistaProducto extends AppCompatActivity {
         Intent intent = getIntent();
         String nombreProducto = intent.getStringExtra("nombreProducto");
         String descripcionProducto = intent.getStringExtra("descripcionProducto");
-        double precioProducto = intent.getDoubleExtra("precioProducto", 0.0);
+        double precioProducto = intent.getDoubleExtra("precioProducto", 0.00);
         int imagenProducto = intent.getIntExtra("imagenProducto", -1);
         int idProducto = intent.getIntExtra("idProducto", -1);
 

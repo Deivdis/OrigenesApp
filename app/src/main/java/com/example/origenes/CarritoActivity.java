@@ -40,8 +40,9 @@ public class CarritoActivity extends AppCompatActivity {
     private Button pagarButton;
     private PaymentSheet paymentSheet;
     private String clientSecret;
-    private String publishableKey = "pk_test_51Ovia8P5eeNXgaze8j1kXdfPSySSXeGtjG3KZpufnX5U0jLZ8PEX0wicEJ9QQRRkN8V4xr0W1AKfAdDnLqaNe2ph00yJYK2OGR";
-    private String secretKey = "sk_test_51Ovia8P5eeNXgazemGBIjiGaN5KRilot9Xphnyhm8U566fRf1GtGjndbQRc4A2q4eUquvjX0pFPqtMNbh9haZApa00OnnLcqbg";
+    private final String publishableKey = "pk_test_51Ovia8P5eeNXgaze8j1kXdfPSySSXeGtjG3KZpufnX5U0jLZ8PEX0wicEJ9QQRRkN8V4xr0W1AKfAdDnLqaNe2ph00yJYK2OGR";
+    private final String secretKey = "sk_test_51Ovia8P5eeNXgazemGBIjiGaN5KRilot9Xphnyhm8U566fRf1GtGjndbQRc4A2q4eUquvjX0pFPqtMNbh9haZApa00OnnLcqbg";
+    private final double exchangeRate = 4000.0; // Tasa de cambio fija (1 USD = 4000 COP)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,32 +77,18 @@ public class CarritoActivity extends AppCompatActivity {
 
         List<Producto> productosEnCarrito = db.obtenerProductosDelCarrito(currentUserId);
 
-        imprimirProductos(productosEnCarrito);
-        carritoAdapter = new CarritoAdapter(productosEnCarrito, db, currentUserId, total -> totalTextView.setText(String.format("Total: $%.2f", total)));
-
+        carritoAdapter = new CarritoAdapter(productosEnCarrito, db, currentUserId, total -> totalTextView.setText(String.format("Total: $%.0f COP", total)));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(carritoAdapter);
 
         calcularTotal(productosEnCarrito);
     }
 
-    private void imprimirProductos(List<Producto> productosEnCarrito) {
-        for (Producto producto : productosEnCarrito) {
-            Log.d(TAG, "Producto ID: " + producto.getId());
-            Log.d(TAG, "Nombre: " + producto.getNombre());
-            Log.d(TAG, "Descripción: " + producto.getDescripcion());
-            Log.d(TAG, "Precio: " + producto.getPrecio());
-            Log.d(TAG, "Cantidad: " + producto.getCantidad());
-            Log.d(TAG, "Image Resource ID: " + producto.getImageResourceId());
-        }
-    }
-
     private void calcularTotal(List<Producto> productosEnCarrito) {
-        double total = 0;
-        for (Producto producto : productosEnCarrito) {
-            total += producto.getPrecio() * producto.getCantidad();
-        }
-        totalTextView.setText(String.format("Total: $%.2f", total));
+        double total = productosEnCarrito.stream()
+                .mapToDouble(producto -> producto.getPrecio() * producto.getCantidad())
+                .sum();
+        totalTextView.setText(String.format("Total: $%.0f COP", total));
     }
 
     private void crearPaymentIntent() {
@@ -109,34 +96,43 @@ public class CarritoActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "https://api.stripe.com/v1/payment_intents";
 
+        double totalPesos = calcularTotalProductos();
+        int totalDolaresCentavos = (int) Math.round(totalPesos / exchangeRate * 100);
+
+        Log.d(TAG, "Total en COP: " + totalPesos);
+        Log.d(TAG, "Total en USD: " + totalDolaresCentavos / 100.0);
+        Log.d(TAG, "Total en Centavos USD: " + totalDolaresCentavos);
+
+        if (totalDolaresCentavos < 50) { // Se requiere un mínimo de 0.50 USD como monto mínimo de pago
+            Log.e(TAG, "El monto es demasiado pequeño para procesar un pago.");
+            totalTextView.setText("El monto mínimo para el pago es $0.50 USD.");
+            return;
+        }
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d(TAG, "Respuesta de Stripe: " + response);
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            clientSecret = jsonObject.getString("client_secret");
-                            presentarFormularioDePago();
-                        } catch (JSONException e) {
-                            Log.e(TAG, "Error al parsear respuesta de Stripe: " + e.getMessage());
-                        }
+                response -> {
+                    Log.d(TAG, "Respuesta de Stripe: " + response);
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        clientSecret = jsonObject.getString("client_secret");
+                        presentarFormularioDePago();
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Error al parsear respuesta de Stripe: " + e.getMessage());
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (error.networkResponse != null && error.networkResponse.data != null) {
-                    String errorMsg = new String(error.networkResponse.data);
-                    Log.e(TAG, "Error en la solicitud a Stripe: " + errorMsg);
-                } else {
-                    Log.e(TAG, "Error en la solicitud a Stripe: " + error.getMessage());
+                },
+                error -> {
+                    if (error.networkResponse != null && error.networkResponse.data != null) {
+                        String errorMsg = new String(error.networkResponse.data);
+                        Log.e(TAG, "Error en la solicitud a Stripe: " + errorMsg);
+                    } else {
+                        Log.e(TAG, "Error en la solicitud a Stripe: " + error.getMessage());
+                    }
                 }
-            }
-        }) {
+        ) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("amount", "1000"); // Monto en centavos
+                params.put("amount", String.valueOf(totalDolaresCentavos)); // Monto en centavos
                 params.put("currency", "usd");
                 return params;
             }
@@ -145,7 +141,7 @@ public class CarritoActivity extends AppCompatActivity {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Bearer " + secretKey);
-                headers.put("Content-Type", "application/x-www-form-urlencoded"); // Asegúrate de que el tipo de contenido sea correcto
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
                 return headers;
             }
         };
@@ -168,4 +164,21 @@ public class CarritoActivity extends AppCompatActivity {
             Log.e(TAG, "Error en el pago: " + failedResult.getError());
         }
     }
+
+    private double calcularTotalProductos() {
+        SharedPreferences prefs = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        int currentUserId = prefs.getInt("userId", -1);
+
+        if (currentUserId == -1) {
+            Log.e(TAG, "No user ID found, user might not be logged in");
+            return 0;
+        }
+
+        List<Producto> productosEnCarrito = db.obtenerProductosDelCarrito(currentUserId);
+        return productosEnCarrito.stream()
+                .mapToDouble(producto -> producto.getPrecio() * producto.getCantidad())
+                .sum();
+    }
 }
+
+

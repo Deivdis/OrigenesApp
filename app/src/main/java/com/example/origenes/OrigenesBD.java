@@ -146,17 +146,17 @@ public class OrigenesBD extends SQLiteOpenHelper {
         insertarCategoria(db, "Especiales", R.drawable.especiales);
 
         // Insertar productos suplementos
-        insertarProducto(db, "Omega 3", "Suplemento de aceite de pescado.", "25.000", 1, R.drawable.omega3);
-        insertarProducto(db, "Melatonina", "Suplemento para dormir.", "41.341", 1, R.drawable.melatonina);
+        insertarProducto(db, "Omega 3", "Suplemento de aceite de pescado.", "85.999", 1, R.drawable.omega3);
+        insertarProducto(db, "Melatonina", "Suplemento para dormir.", "41.999", 1, R.drawable.melatonina);
         // Insertar productos herbales
-        insertarProducto(db, "Té Verde", "Bebida de hojas de té verde.", "15.000", 2, R.drawable.te_verde);
+        insertarProducto(db, "Té Verde", "Bebida de hojas de té verde.", "45.999", 2, R.drawable.te_verde);
         // Insertar productos vitaminas
-        insertarProducto(db, "Vitamina C", "Suplemento de vitamina C.", "10.000", 3, R.drawable.vitamina_c);
+        insertarProducto(db, "Vitamina C", "Suplemento de vitamina C.", "16.999", 3, R.drawable.vitamina_c);
         // Insertar productos minerales
-        insertarProducto(db, "Calcio", "El calcio es la principal fuente de minerales para los huesos", "20.000", 4, R.drawable.calcio);
+        insertarProducto(db, "Calcio", "El calcio es la principal fuente de minerales para los huesos", "31.999", 4, R.drawable.calcio);
         // Insertar productos especiales
-        insertarProducto(db, "Lisina", "Lisina es un aminoácido esencial que no produce", "38.691", 5, R.drawable.lisina);
-        insertarProducto(db, "Carcato Activado", "El carbón activado para eliminar toxicinas no deseadas", "65.798", 5, R.drawable.carcatoactivado);
+        insertarProducto(db, "Lisina", "Lisina es un aminoácido esencial que no produce", "38.999", 5, R.drawable.lisina);
+        insertarProducto(db, "Carcato Activado", "El carbón activado para eliminar toxicinas no deseadas", "65.999", 5, R.drawable.carcatoactivado);
 
     }
 
