@@ -70,14 +70,14 @@ public class CarritoActivity extends AppCompatActivity {
         int currentUserId = prefs.getInt("userId", -1);
 
         if (currentUserId == -1) {
-            Log.e(TAG, "No user ID found, user might not be logged in");
+            Log.e(TAG, "No se encontró ningún ID de usuario; es posible que el usuario no haya iniciado sesión");
             return;
         }
 
         List<Producto> productosEnCarrito = db.obtenerProductosDelCarrito(currentUserId);
 
         imprimirProductos(productosEnCarrito);
-        carritoAdapter = new CarritoAdapter(productosEnCarrito, db, currentUserId, total -> totalTextView.setText(String.format("Total: $%.2f", total)));
+        carritoAdapter = new CarritoAdapter(productosEnCarrito, db, currentUserId, total -> totalTextView.setText(String.format("Total: $%.3f", total)));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(carritoAdapter);
