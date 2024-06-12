@@ -39,7 +39,7 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
     public void onBindViewHolder(@NonNull CarritoViewHolder holder, int position) {
         Producto producto = productosEnCarrito.get(position);
         holder.nombreTextView.setText(producto.getNombre());
-        holder.precioTextView.setText(String.format("$%.2f", producto.getPrecio()));
+        holder.precioTextView.setText(String.format("$%.3f", producto.getPrecio()));
         holder.cantidadTextView.setText(String.format("%d", producto.getCantidad()));
         holder.imagenImageView.setImageResource(producto.getImageResourceId());
 
