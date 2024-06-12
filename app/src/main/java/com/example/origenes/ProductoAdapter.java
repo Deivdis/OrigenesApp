@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
 
 public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ProductoViewHolder> {
 
@@ -44,7 +45,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
     public void setProductos(List<Producto> productos) {
         this.productoList = productos;
         this.productoListFull = new ArrayList<>(productos);
-        notifyDataSetChanged();
+        actualizarvista();
     }
 
     public void filter(String text) {
@@ -60,6 +61,10 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
                 }
             }
         }
+        actualizarvista();
+    }
+
+    public void actualizarvista(){
         notifyDataSetChanged();
     }
 

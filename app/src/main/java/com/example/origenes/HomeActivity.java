@@ -1,13 +1,16 @@
 package com.example.origenes;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -36,109 +39,126 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
     private RecyclerView recyclerViewProducto;
     private ProgressBar progressBarPopular;
     private RecyclerView recyclerViewCategorias;
-    private ProductoAdapter productoAdapter;
+    public static ProductoAdapter productoAdapter;
+    public static boolean isIngresar = false;
     private CategoriaAdapter categoriaAdapter;
-    private List<Producto> productosList;
-    private List<Categoria> categoriasList;
+    private static List<Producto> productosList = new ArrayList<>();
+    private static List<Categoria> categoriasList = new ArrayList<>();;
     private OrigenesBD databaseHelper;
     private SharedPreferences sharedPref;
     private Handler sliderHandler;
     private List<Integer> imageResources;
     private TextView textViewVerTodos;
 
+    private BroadcastReceiver myReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e("prueba","cantidad de productos: "+productoAdapter.getItemCount());
+            Log.e("lista", "productos: "+productosList.size());
+            Log.e("lista categoria", "productos: "+categoriasList.size());
+        }
+    };
+
+    public static final String ACTION_THEME_CHANGED = "android.intent.action.THEME_CHANGED";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                return insets;
+            });
 
-        sharedPref = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+            sharedPref = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
 
-        viewPagerSlider = findViewById(R.id.viewPagerSlider);
-        progressBarBanner = findViewById(R.id.progressBarBanner);
-        progressBarOfficial = findViewById(R.id.progressBarOfficial);
-        recyclerViewProducto = findViewById(R.id.recyclerViewProducto);
-        progressBarPopular = findViewById(R.id.progressBarPopular);
-        recyclerViewCategorias = findViewById(R.id.recyclerViewCategorias);
-        textViewVerTodos = findViewById(R.id.textView8);
+            viewPagerSlider = findViewById(R.id.viewPagerSlider);
+            progressBarBanner = findViewById(R.id.progressBarBanner);
+            progressBarOfficial = findViewById(R.id.progressBarOfficial);
+            recyclerViewProducto = findViewById(R.id.recyclerViewProducto);
+            progressBarPopular = findViewById(R.id.progressBarPopular);
+            recyclerViewCategorias = findViewById(R.id.recyclerViewCategorias);
+            textViewVerTodos = findViewById(R.id.textView8);
 
-        // Configurar el RecyclerView de productos
-        recyclerViewProducto.setLayoutManager(new GridLayoutManager(this, 2));
+            // Configurar el RecyclerView de productos
+            recyclerViewProducto.setLayoutManager(new GridLayoutManager(this, 2));
 
-        // Configurar el RecyclerView de categorías
-        recyclerViewCategorias.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+            // Configurar el RecyclerView de categorías
+            recyclerViewCategorias.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        // Inicializar las listas de productos y categorías
-        productosList = new ArrayList<>();
-        categoriasList = new ArrayList<>();
+            // Inicializar las listas de productos y categorías
 
-        // Inicializar el adaptador de productos
-        productoAdapter = new ProductoAdapter(productosList, this);
-        recyclerViewProducto.setAdapter(productoAdapter);
+            // Inicializar el adaptador de productos
+            productoAdapter = new ProductoAdapter(productosList, this);
+            recyclerViewProducto.setAdapter(productoAdapter);
 
-        // Inicializar el adaptador de categorías
-        categoriaAdapter = new CategoriaAdapter(categoriasList, this);
-        recyclerViewCategorias.setAdapter(categoriaAdapter);
+            // Inicializar el adaptador de categorías
+            categoriaAdapter = new CategoriaAdapter(categoriasList, this);
+            recyclerViewCategorias.setAdapter(categoriaAdapter);
 
-        // Obtener los productos y categorías de la base de datos
-        databaseHelper = new OrigenesBD(this);
-        obtenerProductos();
-        obtenerCategorias();
+            // Obtener los productos y categorías de la base de datos
+            databaseHelper = new OrigenesBD(this);
+            obtenerProductos();
+            obtenerCategorias();
 
-        // Ocultar la barra de progreso una vez que se hayan cargado los productos (simulado aquí)
-        progressBarPopular.setVisibility(View.GONE);
+            // Ocultar la barra de progreso una vez que se hayan cargado los productos (simulado aquí)
+            progressBarPopular.setVisibility(View.GONE);
 
-        // Configuración del ViewPager y ProgressBar del banner
-        imageResources = databaseHelper.obtenerImagenesSlider();
-        SliderAdapter sliderAdapter = new SliderAdapter(this, imageResources);
-        viewPagerSlider.setAdapter(sliderAdapter);
+            // Configuración del ViewPager y ProgressBar del banner
+            imageResources = databaseHelper.obtenerImagenesSlider();
+            SliderAdapter sliderAdapter = new SliderAdapter(this, imageResources);
+            viewPagerSlider.setAdapter(sliderAdapter);
 
-        // Ocultar la ProgressBar después de configurar el adaptador
-        progressBarBanner.setVisibility(View.GONE);
-        progressBarOfficial.setVisibility(View.GONE);
+            // Ocultar la ProgressBar después de configurar el adaptador
+            progressBarBanner.setVisibility(View.GONE);
+            progressBarOfficial.setVisibility(View.GONE);
 
-        // Iniciar el auto deslizamiento del slider
-        sliderHandler = new Handler(Looper.getMainLooper());
-        startAutoSlide();
+            // Iniciar el auto deslizamiento del slider
+            sliderHandler = new Handler(Looper.getMainLooper());
+            startAutoSlide();
 
-        // Configurar el botón de cerrar sesión
-        ImageView btnLogout = findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(v -> {
-            setSessionActive(false);
-            Intent intent = new Intent(HomeActivity.this, Login.class);
-            startActivity(intent);
-            finish();
-        });
+            // Configurar el botón de cerrar sesión
+            ImageView btnLogout = findViewById(R.id.btnLogout);
+            btnLogout.setOnClickListener(v -> {
+                setSessionActive(false);
+                Intent intent = new Intent(this, Login.class);
+                startActivity(intent);
+                finish();
+            });
 
-        // Configurar el OnClickListener para textViewVerTodos
-        textViewVerTodos.setOnClickListener(v -> productoAdapter.setProductos(productosList));
+            // Configurar el OnClickListener para textViewVerTodos
+            textViewVerTodos.setOnClickListener(v -> productoAdapter.setProductos(productosList));
 
-        // Configurar el SearchView para buscar productos
-        SearchView searchView = findViewById(R.id.searchView);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                productoAdapter.filter(query);
-                return false;
-            }
+            // Configurar el SearchView para buscar productos
+            SearchView searchView = findViewById(R.id.searchView);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    productoAdapter.filter(query);
+                    return false;
+                }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                productoAdapter.filter(newText);
-                return false;
-            }
-        });
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    productoAdapter.filter(newText);
+                    return false;
+                }
+            });
 
-        ImageView cartImageView = findViewById(R.id.imageView6);
-        cartImageView.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, CarritoActivity.class);
-            startActivity(intent);
-        });
+
+            // Register the receiver
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(Intent.ACTION_SCREEN_ON);
+            // Add more actions if needed
+            registerReceiver(myReceiver, filter);
+
+            ImageView cartImageView = findViewById(R.id.imageView6);
+            cartImageView.setOnClickListener(v -> {
+                Intent intent = new Intent(this, CarritoActivity.class);
+                startActivity(intent);
+            });
     }
 
     private void startAutoSlide() {
@@ -158,6 +178,7 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
     protected void onDestroy() {
         super.onDestroy();
         sliderHandler.removeCallbacksAndMessages(null);
+        unregisterReceiver(myReceiver);
     }
 
     private void setSessionActive(boolean active) {

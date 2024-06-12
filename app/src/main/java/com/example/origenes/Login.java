@@ -127,6 +127,7 @@ public class Login extends AppCompatActivity {
 
     private void goToHomeActivity() {
         Intent intent = new Intent(Login.this, HomeActivity.class);
+        HomeActivity.isIngresar = true;
         startActivity(intent);
         finish();
     }

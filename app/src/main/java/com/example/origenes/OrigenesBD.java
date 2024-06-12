@@ -299,9 +299,9 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.close();
 
     }
-    public void vaciarCarrito(int userId) {
+    public void vaciarCarrito(int usuarioId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete("Carrito", "userId = ?", new String[]{String.valueOf(userId)});
+        db.delete(TABLA_CARRITO, COLUMNA_CARRITO_USUARIO_ID + " = ?", new String[]{String.valueOf(usuarioId)});
         db.close();
     }
 

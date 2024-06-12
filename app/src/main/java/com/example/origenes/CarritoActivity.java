@@ -158,7 +158,6 @@ public class CarritoActivity extends AppCompatActivity {
         if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
             Log.d(TAG, "Pago completado exitosamente");
             vaciarCarrito();
-            redirigirAlHome();
         } else if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
             Log.d(TAG, "Pago cancelado por el usuario");
         } else if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
@@ -169,21 +168,23 @@ public class CarritoActivity extends AppCompatActivity {
 
     private void vaciarCarrito() {
         SharedPreferences prefs = getSharedPreferences("MyPreferences", MODE_PRIVATE);
-        int currentUserId = prefs.getInt("userId", -1);
+        int currentUserId = prefs.getInt("userId", 0);
 
-        if (currentUserId != -1) {
+        if (currentUserId != 0) {
             db.vaciarCarrito(currentUserId);
             Log.d(TAG, "Carrito vaciado para el usuario con ID: " + currentUserId);
+
+            // Actualizar la lista de productos y la vista del RecyclerView
+            List<Producto> productosVacios = db.obtenerProductosDelCarrito(currentUserId);
+            carritoAdapter = new CarritoAdapter(productosVacios, db, currentUserId, total -> totalTextView.setText(String.format("Total: $%.0f COP", total)));
+            recyclerView.setAdapter(carritoAdapter);
+            carritoAdapter.notifyDataSetChanged();
+
+            // Recalcular el total
+            calcularTotal(productosVacios);
         } else {
             Log.e(TAG, "No se encontró ID de usuario, es posible que el usuario no esté logueado");
         }
-    }
-
-    private void redirigirAlHome() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
     }
 
     private double calcularTotalProductos() {

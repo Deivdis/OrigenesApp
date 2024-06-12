@@ -102,5 +102,6 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
             decreaseQuantityButton = itemView.findViewById(R.id.decreaseQuantityButton);
             eliminarProductoButton = itemView.findViewById(R.id.eliminarProductoButton);
         }
+
     }
 }
