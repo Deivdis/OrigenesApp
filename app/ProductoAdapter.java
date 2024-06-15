@@ -33,7 +33,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         ProductoViewHolder(View itemView) {
             super(itemView);
             nombreTextView = itemView.findViewById(R.id.nombreTextView);
-            descripcionTextView = itemView.findViewById(R.id.descripcionTextView);
+//            descripcionTextView = itemView.findViewById(R.id.descripcionTextView);
             precioTextView = itemView.findViewById(R.id.precioTextView);
         }
     }

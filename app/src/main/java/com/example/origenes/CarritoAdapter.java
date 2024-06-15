@@ -41,7 +41,7 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
         holder.nombreTextView.setText(producto.getNombre());
         holder.precioTextView.setText(String.format("$%.3f", producto.getPrecio()));
         holder.cantidadTextView.setText(String.format("%d", producto.getCantidad()));
-        holder.imagenImageView.setImageResource(producto.getImageResourceId());
+        //holder.imagenImageView.setImageResource(producto.getImageResourceId());
 
         holder.increaseQuantityButton.setOnClickListener(v -> {
             int nuevaCantidad = producto.getCantidad() + 1;
@@ -87,7 +87,7 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
         TextView nombreTextView;
         TextView precioTextView;
         TextView cantidadTextView;
-        ImageView imagenImageView;
+        //ImageView imagenImageView;
         ImageView increaseQuantityButton;
         ImageView decreaseQuantityButton;
         ImageView eliminarProductoButton;
@@ -97,7 +97,7 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
             nombreTextView = itemView.findViewById(R.id.nombreProductoTextView);
             precioTextView = itemView.findViewById(R.id.precioProductoTextView);
             cantidadTextView = itemView.findViewById(R.id.cantidadProductoTextView);
-            imagenImageView = itemView.findViewById(R.id.imagenProductoImageView);
+            //imagenImageView = itemView.findViewById(R.id.imagenProductoImageView);
             increaseQuantityButton = itemView.findViewById(R.id.increaseQuantityButton);
             decreaseQuantityButton = itemView.findViewById(R.id.decreaseQuantityButton);
             eliminarProductoButton = itemView.findViewById(R.id.eliminarProductoButton);

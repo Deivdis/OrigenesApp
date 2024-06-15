@@ -104,7 +104,6 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
 
         public void bind(Producto producto) {
             txtNombreProducto.setText(producto.getNombre());
-            txtDescripcionProducto.setText(producto.getDescripcion());
             txtPrecioProducto.setText(String.valueOf(producto.getPrecio()));
             imgProducto.setImageResource(producto.getImageResourceId());
         }

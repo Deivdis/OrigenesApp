@@ -1,18 +1,22 @@
 package com.example.origenes;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Login extends AppCompatActivity {
@@ -39,7 +43,8 @@ public class Login extends AppCompatActivity {
         sharedPref = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
 
         // Abrir la base de datos
-        db = openOrCreateDatabase(OrigenesBD.DATABASE_NAME, MODE_PRIVATE, null);
+        OrigenesBD dbHelper = new OrigenesBD(this);
+        db = dbHelper.getReadableDatabase();
 
         // Verificar si el usuario ya ha iniciado sesión previamente
         if (isSessionActive()) {
@@ -71,8 +76,8 @@ public class Login extends AppCompatActivity {
                 try {
                     cursor = db.rawQuery("SELECT " + OrigenesBD.COLUMNA_ID + ", " + OrigenesBD.COLUMNA_CONTRASENA + " FROM " + OrigenesBD.TABLA_USUARIOS + " WHERE " + OrigenesBD.COLUMNA_CORREO + " = ?", new String[]{correo});
                     if (cursor.moveToFirst()) {
-                        int userId = cursor.getInt(cursor.getColumnIndex(OrigenesBD.COLUMNA_ID));
-                        String hashedPassword = cursor.getString(cursor.getColumnIndex(OrigenesBD.COLUMNA_CONTRASENA));
+                        int userId = cursor.getInt(0); // Acceder a las columnas por índice
+                        String hashedPassword = cursor.getString(1); // Acceder a las columnas por índice
 
                         if (hashedPassword.equals(contrasena)) {
                             setSessionActive(true);

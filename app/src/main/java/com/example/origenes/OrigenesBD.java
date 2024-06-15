@@ -122,8 +122,10 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.execSQL(CREAR_TABLA_PRODUCTOS);
         db.execSQL(CREAR_TABLA_SLIDER);
         db.execSQL(CREAR_TABLA_CARRITO);
+        Log.d("OrigenesBD", "Database tables created successfully.");
         agregarProductos(db); // Agregar productos de ejemplo
         agregarImagenesSlider(db); // Agregar imágenes del slider de ejemplo
+        Log.d("OrigenesBD", "Sample data inserted successfully.");
     }
 
     @Override
@@ -134,6 +136,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLA_SLIDER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLA_CARRITO);
         onCreate(db);
+        Log.d("OrigenesBD", "Database upgraded successfully.");
     }
 
     // Método para insertar datos de ejemplo
@@ -146,17 +149,20 @@ public class OrigenesBD extends SQLiteOpenHelper {
         insertarCategoria(db, "Especiales", R.drawable.especiales);
 
         // Insertar productos suplementos
-        insertarProducto(db, "Omega 3", "Suplemento de aceite de pescado.", "85.999", 1, R.drawable.omega3);
-        insertarProducto(db, "Melatonina", "Suplemento para dormir.", "41.999", 1, R.drawable.melatonina);
+        insertarProducto(db, "Omega 3", "Suplemento de Omega-3 y Vitamina D3 que contribuye al bienestar cardiovascular, cerebral y ocular. Favorece la función inmunológica y el bienestar general del organismo. Formulado con ingredientes naturales para un equilibrio óptimo de nutrientes..", "85.999", 1, R.drawable.omega3);
+        insertarProducto(db, "Melatonina", "Descubre el poder de la melatonina para transformar tus noches! Este aliado natural te ayuda a lograr un sueño profundo y reparador, para que despiertes renovado y lleno de energía. Ya sea que enfrentes insomnio ocasional, desfase horario, o simplemente busques mejorar tu calidad de descanso.", "41.999", 1, R.drawable.melatonina);
         // Insertar productos herbales
-        insertarProducto(db, "Té Verde", "Bebida de hojas de té verde.", "45.999", 2, R.drawable.te_verde);
+        insertarProducto(db, "Té Verde", "El Té Verde contiene flavonoides beneficiosos, que son fitoquímicos naturales. El extracto de Té Verde brinda un poderoso apoyo antioxidante y, además, ha sido utilizado tradicionalmente para respaldar la salud del corazón. Es una elección natural y un impulso en su bienestar diario.", "45.999", 2, R.drawable.te_verde);
         // Insertar productos vitaminas
-        insertarProducto(db, "Vitamina C", "Suplemento de vitamina C.", "16.999", 3, R.drawable.vitamina_c);
+        insertarProducto(db, "Vitamina C", "\n" +
+                "La vitamina C desempeña un papel crucial en el apoyo a la función del sistema inmunológico.* Como antioxidante, ayuda a combatir los radicales libres en el cuerpo, contribuyendo así a su bienestar general.", "16.999", 3, R.drawable.vitamina_c);
         // Insertar productos minerales
-        insertarProducto(db, "Calcio", "El calcio es la principal fuente de minerales para los huesos", "31.999", 4, R.drawable.calcio);
+        insertarProducto(db, "Calcio", "\n" +
+                "El calcio es fundamental para huesos fuertes, contracción muscular y función nerviosa.* La vitamina D ayuda en la absorción del calcio y en el sistema inmunológico.* Una dieta equilibrada, ejercicio regular y una ingesta adecuada de calcio y vitamina D ayudan a mantener la salud de los huesos y el riesgo de osteoporosis.", "31.999", 4, R.drawable.calcio);
         // Insertar productos especiales
-        insertarProducto(db, "Lisina", "Lisina es un aminoácido esencial que no produce", "38.999", 5, R.drawable.lisina);
-        insertarProducto(db, "Carcato Activado", "El carbón activado para eliminar toxicinas no deseadas", "65.999", 5, R.drawable.carcatoactivado);
+        insertarProducto(db, "Lisina", "La L-Lisina es un aminoácido esencial que el cuerpo no puede producir, por lo que debe obtenerse a partir de fuentes nutricionales. Se utiliza para mantener la salud y la integridad de la piel y también participa en la producción de colágeno y el mantenimiento de los tejidos.", "38.999", 5, R.drawable.lisina);
+        insertarProducto(db, "Carcato Activado", "\n" +
+                "El carbón activado ha sido utilizado durante más de 180 años para adsorber toxinas no deseadas en el cuerpo. Documentado por profesionales de la salud franceses y estadounidenses, Nature’s Bounty ofrece carbón activado con 520 mg por porción, ideal para su uso después de las comidas.", "65.999", 5, R.drawable.carcatoactivado);
 
     }
 
