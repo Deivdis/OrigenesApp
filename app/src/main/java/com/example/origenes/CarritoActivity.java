@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,6 +58,7 @@ public class CarritoActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewCarrito);
         totalTextView = findViewById(R.id.totalTextView);
         pagarButton = findViewById(R.id.Pagarbutton);
+        ImageView backButton = findViewById(R.id.back);
 
         obtenerProductos();
 
@@ -64,6 +66,7 @@ public class CarritoActivity extends AppCompatActivity {
             Log.d(TAG, "Pagarbutton clicked");
             crearPaymentIntent();
         });
+        backButton.setOnClickListener(v -> finish());
     }
 
     private void obtenerProductos() {

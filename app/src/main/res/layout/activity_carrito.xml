@@ -50,6 +50,17 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/back"
+                    android:layout_width="33dp"
+                    android:layout_height="29dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.013"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/left_icon" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -116,7 +127,7 @@
                 android:layout_marginLeft="150dp"
                 android:background="@drawable/green_bg"
                 android:padding="16dp"
-                android:text="pay with card"
+                android:text="Pagar con tarjeta"
                 android:textAllCaps="false"
                 android:textColor="@color/Negro"
                 app:layout_constraintBottom_toBottomOf="parent"

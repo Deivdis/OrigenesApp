@@ -177,10 +177,10 @@ public class HomeActivity extends AppCompatActivity implements CategoriaAdapter.
                 int currentItem = viewPagerSlider.getCurrentItem();
                 int nextItem = (currentItem + 1) % imageResources.size();
                 viewPagerSlider.setCurrentItem(nextItem, true);
-                sliderHandler.postDelayed(this, 5000);
+                sliderHandler.postDelayed(this, 9000);
             }
         };
-        sliderHandler.postDelayed(runnable, 3000);
+        sliderHandler.postDelayed(runnable, 6000);
     }
 
     @Override

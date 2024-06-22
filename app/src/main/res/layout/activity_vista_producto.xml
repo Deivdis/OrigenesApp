@@ -199,7 +199,7 @@
                 android:layout_marginLeft="150dp"
                 android:background="@drawable/green_bg"
                 android:padding="16dp"
-                android:text="Add to Cart"
+                android:text="Añadir a la cesta"
                 android:textAllCaps="false"
                 android:textColor="@color/Negro"
                 app:layout_constraintBottom_toBottomOf="parent"

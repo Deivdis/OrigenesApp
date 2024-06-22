@@ -107,7 +107,7 @@ public class vistaProducto extends AppCompatActivity {
             } else {
                 db.agregarProductoAlCarrito(currentUserId, productoId, cantidad);
             }
-            Toast.makeText(vistaProducto.this, "Producto agregado al carrito", Toast.LENGTH_SHORT).show();
+            Toast.makeText(vistaProducto.this, "Producto agregado a la cesta", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(vistaProducto.this, "Usuario no identificado, por favor inicia sesión.", Toast.LENGTH_SHORT).show();
         }
