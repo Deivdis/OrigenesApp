@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-06-04T00:22:17.802157300Z">
+        <DropdownSelection timestamp="2024-06-22T21:49:36.367962900Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\USUARIO\.android\avd\IphineX_API_30.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=8561f24a0504" />
             </handle>
           </Target>
         </DropdownSelection>
