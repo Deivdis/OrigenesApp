@@ -149,20 +149,22 @@ public class OrigenesBD extends SQLiteOpenHelper {
         insertarCategoria(db, "Especiales", R.drawable.especiales);
 
         // Insertar productos suplementos
-        insertarProducto(db, "Omega 3", "Suplemento de Omega-3 y Vitamina D3 que contribuye al bienestar cardiovascular, cerebral y ocular. Favorece la función inmunológica y el bienestar general del organismo. Formulado con ingredientes naturales para un equilibrio óptimo de nutrientes..", "85.999", 1, R.drawable.omega3);
-        insertarProducto(db, "Melatonina", "Descubre el poder de la melatonina para transformar tus noches! Este aliado natural te ayuda a lograr un sueño profundo y reparador, para que despiertes renovado y lleno de energía. Ya sea que enfrentes insomnio ocasional, desfase horario, o simplemente busques mejorar tu calidad de descanso.", "41.999", 1, R.drawable.melatonina);
+        insertarProducto(db, "Omega 3", "Suplemento de Omega-3 y Vitamina D3 que contribuye al bienestar cardiovascular, cerebral y ocular. Favorece la función inmunológica y el bienestar general del organismo. Formulado con ingredientes naturales para un equilibrio óptimo de nutrientes..", "110.665", 1, R.drawable.omega3);
+        insertarProducto(db, "Melatonina", "Descubre el poder de la melatonina para transformar tus noches! Este aliado natural te ayuda a lograr un sueño profundo y reparador, para que despiertes renovado y lleno de energía. Ya sea que enfrentes insomnio ocasional, desfase horario, o simplemente busques mejorar tu calidad de descanso.", "16.965", 1, R.drawable.melatonina);
         // Insertar productos herbales
-        insertarProducto(db, "Té Verde", "El Té Verde contiene flavonoides beneficiosos, que son fitoquímicos naturales. El extracto de Té Verde brinda un poderoso apoyo antioxidante y, además, ha sido utilizado tradicionalmente para respaldar la salud del corazón. Es una elección natural y un impulso en su bienestar diario.", "45.999", 2, R.drawable.te_verde);
+        insertarProducto(db, "Té Verde", "El Té Verde contiene flavonoides beneficiosos, que son fitoquímicos naturales. El extracto de Té Verde brinda un poderoso apoyo antioxidante y, además, ha sido utilizado tradicionalmente para respaldar la salud del corazón. Es una elección natural y un impulso en su bienestar diario.", "97.555", 2, R.drawable.te_verde);
+        insertarProducto(db, "Ginkgo Biloba", "\n" +
+                "Suplemento de Ginkgo Biloba: El extracto estandarizado de Ginkgo Biloba de 120 mg puede ayudar a mantener una circulación saludable y puede ayudar a apoyar la alerta mental y la función cerebral saludable, perfecto para problemas ocasionales de memoria leves asociados con el envejecimiento.", "65.385", 2, R.drawable.ginkgo_biloba);
         // Insertar productos vitaminas
         insertarProducto(db, "Vitamina C", "\n" +
-                "La vitamina C desempeña un papel crucial en el apoyo a la función del sistema inmunológico.* Como antioxidante, ayuda a combatir los radicales libres en el cuerpo, contribuyendo así a su bienestar general.", "16.999", 3, R.drawable.vitamina_c);
+                "La vitamina C desempeña un papel crucial en el apoyo a la función del sistema inmunológico.* Como antioxidante, ayuda a combatir los radicales libres en el cuerpo, contribuyendo así a su bienestar general.", "73.232", 3, R.drawable.vitamina_c);
         // Insertar productos minerales
         insertarProducto(db, "Calcio", "\n" +
-                "El calcio es fundamental para huesos fuertes, contracción muscular y función nerviosa.* La vitamina D ayuda en la absorción del calcio y en el sistema inmunológico.* Una dieta equilibrada, ejercicio regular y una ingesta adecuada de calcio y vitamina D ayudan a mantener la salud de los huesos y el riesgo de osteoporosis.", "31.999", 4, R.drawable.calcio);
+                "El calcio es fundamental para huesos fuertes, contracción muscular y función nerviosa.* La vitamina D ayuda en la absorción del calcio y en el sistema inmunológico.* Una dieta equilibrada, ejercicio regular y una ingesta adecuada de calcio y vitamina D ayudan a mantener la salud de los huesos y el riesgo de osteoporosis.", "33.765", 4, R.drawable.calcio);
         // Insertar productos especiales
-        insertarProducto(db, "Lisina", "La L-Lisina es un aminoácido esencial que el cuerpo no puede producir, por lo que debe obtenerse a partir de fuentes nutricionales. Se utiliza para mantener la salud y la integridad de la piel y también participa en la producción de colágeno y el mantenimiento de los tejidos.", "38.999", 5, R.drawable.lisina);
+        insertarProducto(db, "Lisina", "La L-Lisina es un aminoácido esencial que el cuerpo no puede producir, por lo que debe obtenerse a partir de fuentes nutricionales. Se utiliza para mantener la salud y la integridad de la piel y también participa en la producción de colágeno y el mantenimiento de los tejidos.", "43.656", 5, R.drawable.lisina);
         insertarProducto(db, "Carcato Activado", "\n" +
-                "El carbón activado ha sido utilizado durante más de 180 años para adsorber toxinas no deseadas en el cuerpo. Documentado por profesionales de la salud franceses y estadounidenses, Nature’s Bounty ofrece carbón activado con 520 mg por porción, ideal para su uso después de las comidas.", "65.999", 5, R.drawable.carcatoactivado);
+                "El carbón activado ha sido utilizado durante más de 180 años para adsorber toxinas no deseadas en el cuerpo. Documentado por profesionales de la salud franceses y estadounidenses, Nature’s Bounty ofrece carbón activado con 520 mg por porción, ideal para su uso después de las comidas.", "65.385", 5, R.drawable.carcatoactivado);
 
     }
 
@@ -219,6 +221,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.close();
         return imagenes;
     }
+
     // Insertar producto en el carrito
     public void agregarProductoAlCarrito(int usuarioId, int productoId, int cantidad) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -305,6 +308,7 @@ public class OrigenesBD extends SQLiteOpenHelper {
         db.close();
 
     }
+
     public void vaciarCarrito(int usuarioId) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLA_CARRITO, COLUMNA_CARRITO_USUARIO_ID + " = ?", new String[]{String.valueOf(usuarioId)});

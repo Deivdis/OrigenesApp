@@ -80,7 +80,7 @@ public class CarritoActivity extends AppCompatActivity {
 
         List<Producto> productosEnCarrito = db.obtenerProductosDelCarrito(currentUserId);
 
-        carritoAdapter = new CarritoAdapter(productosEnCarrito, db, currentUserId, total -> totalTextView.setText(String.format("Total: $%.0f COP", total)));
+        carritoAdapter = new CarritoAdapter(productosEnCarrito, db, currentUserId, total -> totalTextView.setText(String.format("Total: $%.3f ", total)));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(carritoAdapter);
 
@@ -91,7 +91,7 @@ public class CarritoActivity extends AppCompatActivity {
         double total = productosEnCarrito.stream()
                 .mapToDouble(producto -> producto.getPrecio() * producto.getCantidad())
                 .sum();
-        totalTextView.setText(String.format("Total: $%.0f COP", total));
+        totalTextView.setText(String.format("Total: $%.3f", total));
     }
 
     private void crearPaymentIntent() {
@@ -179,7 +179,7 @@ public class CarritoActivity extends AppCompatActivity {
 
             // Actualizar la lista de productos y la vista del RecyclerView
             List<Producto> productosVacios = db.obtenerProductosDelCarrito(currentUserId);
-            carritoAdapter = new CarritoAdapter(productosVacios, db, currentUserId, total -> totalTextView.setText(String.format("Total: $%.0f COP", total)));
+            carritoAdapter = new CarritoAdapter(productosVacios, db, currentUserId, total -> totalTextView.setText(String.format("Total: $%.3f COP", total)));
             recyclerView.setAdapter(carritoAdapter);
             carritoAdapter.notifyDataSetChanged();
 

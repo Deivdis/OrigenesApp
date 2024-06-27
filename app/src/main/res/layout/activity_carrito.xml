@@ -109,16 +109,17 @@
 
             <TextView
                 android:id="@+id/totalTextView"
-                android:layout_width="143dp"
+                android:layout_width="157dp"
                 android:layout_height="21dp"
                 android:text="Total: $0.00"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.127"
+                app:layout_constraintHorizontal_bias="0.067"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.504" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/Pagarbutton"
