@@ -158,7 +158,11 @@ public class OrigenesBD extends SQLiteOpenHelper {
         // Insertar productos vitaminas
         insertarProducto(db, "Vitamina C", "\n" +
                 "La vitamina C desempeña un papel crucial en el apoyo a la función del sistema inmunológico.* Como antioxidante, ayuda a combatir los radicales libres en el cuerpo, contribuyendo así a su bienestar general.", "73.232", 3, R.drawable.vitamina_c);
+        insertarProducto(db, "Vitamina E", "\n" +
+                "La vitamina E es un nutriente esencial crucial para una buena salud que también apoya la función inmune. La vitamina E contiene propiedades antioxidantes que ayudan a combatir los radicales libres en el cuerpo.", "98.452", 3, R.drawable.vitamina_e);
         // Insertar productos minerales
+        insertarProducto(db, "Hierro", "\n" +
+                "El hierro es un componente necesario de la hemoglobina, el transportador de oxígeno en la sangre, y promueve la utilización de la energía celular. El hierro también apoya la producción normal de glóbulos rojos y es importante para la salud nutricional de las mujeres.", "24.835", 4, R.drawable.gentleiron);
         insertarProducto(db, "Calcio", "\n" +
                 "El calcio es fundamental para huesos fuertes, contracción muscular y función nerviosa.* La vitamina D ayuda en la absorción del calcio y en el sistema inmunológico.* Una dieta equilibrada, ejercicio regular y una ingesta adecuada de calcio y vitamina D ayudan a mantener la salud de los huesos y el riesgo de osteoporosis.", "33.765", 4, R.drawable.calcio);
         // Insertar productos especiales
